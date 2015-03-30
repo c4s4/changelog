@@ -4,7 +4,6 @@ import (
     "fmt"
     "gopkg.in/yaml.v2"
     "io/ioutil"
-    "os"
 )
 
 const (
