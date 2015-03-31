@@ -28,6 +28,7 @@ var REGEXP_FILENAME = regexp.MustCompile("^(?i)change(-|_)?log(.yml|.yaml)?$")
 var DEFAULT_COMMAND = "summary"
 var COMMAND_MAPPING = map[string]Command {
   "summary": summary,
+  "date": date,
 }
 
 func readChangeLog() []byte {
