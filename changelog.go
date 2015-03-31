@@ -8,7 +8,7 @@ import (
 	"regexp"
 )
 
-type Command func(ChangeLog, []string)
+type Command func(*ChangeLog, []string)
 
 type Release struct {
 	Version    string
@@ -61,7 +61,7 @@ func parseChangeLog(source []byte) *ChangeLog {
 	return &changelog
 }
 
-func summary(changelog ChangeLog, args []string) {
+func summary(changelog *ChangeLog, args []string) {
   fmt.Println(changelog[0].Summary)
 }
 
