@@ -57,5 +57,7 @@ func parseChangeLog(source []byte) *ChangeLog {
 
 func main() {
 	changelog := parseChangeLog(readChangeLog())
+	command := os.Args[0]
+	println(command)
 	fmt.Printf("Value: %#v\n", changelog)
 }
