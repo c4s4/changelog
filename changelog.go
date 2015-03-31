@@ -61,8 +61,16 @@ func parseChangeLog(source []byte) *ChangeLog {
 	return &changelog
 }
 
+//////////////////////////////////////////////
+//                 COMMANDS                 //
+//////////////////////////////////////////////
+
 func summary(changelog *ChangeLog, args []string) {
   fmt.Println((*changelog)[0].Summary)
+}
+
+func date(changelog *ChangeLog, args []string) {
+  fmt.Println((*changelog)[0].Date)
 }
 
 func main() {
