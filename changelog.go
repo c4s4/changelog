@@ -25,7 +25,7 @@ type Release struct {
 type ChangeLog []Release
 
 var REGEXP_FILENAME = regexp.MustCompile("^(?i)change(-|_)?log(.yml|.yaml)?$")
-var DEFAULT_COMMAND = "NO_COMMAND"
+var DEFAULT_COMMAND = "summary"
 var COMMAND_MAPPING = map[string]Command {
   "summary": summary,
 }
@@ -80,7 +80,7 @@ func main() {
 	if function != nil {
 	  function(changelog, args)
 	} else {
-	  fmt.Printf("Command %s unknown", command)
+	  fmt.Printf("Command %s unknown\n", command)
 	  os.Exit(3)
 	}
 }
