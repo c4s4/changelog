@@ -1,8 +1,8 @@
 # This Change Log adheres to [Semantic Versioning](http://semver.org).
 
-- version:     1.0.0
-  date:        2015-03-30
-  description: First release
+- version: 1.0.0
+  date:    2015-03-30
+  summary: First release
   added:
   - First added element.
   - Second added element.
@@ -11,3 +11,4 @@
   security:
   - First of course.
 
+- version:
