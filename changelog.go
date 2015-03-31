@@ -59,7 +59,7 @@ func parseChangeLog(source []byte) *ChangeLog {
 	err := yaml.Unmarshal(source, &changelog)
 	if err != nil {
 		fmt.Printf("Error parsing changelog: %s\n", err)
-		os.Exit(ERRIR_PARSING)
+		os.Exit(ERROR_PARSING)
 	}
 	return &changelog
 }
