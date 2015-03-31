@@ -62,7 +62,7 @@ func parseChangeLog(source []byte) *ChangeLog {
 }
 
 func summary(changelog *ChangeLog, args []string) {
-  fmt.Println(changelog[0].Summary)
+  fmt.Println(*changelog[0].Summary)
 }
 
 func main() {
