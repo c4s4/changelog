@@ -25,9 +25,9 @@ type Release struct {
 type ChangeLog []Release
 
 var REGEXP_FILENAME = regexp.MustCompile("^(?i)change(-|_)?log(.yml|.yaml)?$")
-var DEFAULT_COMMAND = "summary"
-var COMMAND_MAPPING = map[string]Command {
-  "release": release,
+var DEFAULT_COMMAND = "release"
+var COMMAND_MAPPING = map[string]Command{
+	"release": release,
 }
 var ERROR_READING = 1
 var ERROR_PARSING = 2
@@ -69,34 +69,34 @@ func parseChangeLog(source []byte) *ChangeLog {
 //////////////////////////////////////////////
 
 func checkRelease(changelog *ChangeLog) {
-  if len(*changelog) == 0 {
-    fmt.Println("Release is empy")
-    os.Exit(ERROR_RELEASE)
-  }
-  release := (*changelog)[0]
-  if release.Version == "" {
-    fmt.Println("Release version is empty")
-    os.Exit(ERROR_RELEASE)
-  }
-  if release.Date == "" {
-    fmt.Println("Release date is empty")
-    os.Exit(ERROR_RELEASE)
-  }
-  if release.Summary == "" {
-    fmt.Println("Release summary is empty")
-    os.Exit(ERROR_RELEASE)
-  }
+	if len(*changelog) == 0 {
+		fmt.Println("Release is empy")
+		os.Exit(ERROR_RELEASE)
+	}
+	release := (*changelog)[0]
+	if release.Version == "" {
+		fmt.Println("Release version is empty")
+		os.Exit(ERROR_RELEASE)
+	}
+	if release.Date == "" {
+		fmt.Println("Release date is empty")
+		os.Exit(ERROR_RELEASE)
+	}
+	if release.Summary == "" {
+		fmt.Println("Release summary is empty")
+		os.Exit(ERROR_RELEASE)
+	}
 }
 
 func release(changelog *ChangeLog, args []string) {
-  checkRelease(changelog)
-  if len(args) > 0 {
-    if args[0] == "summary" {
-      fmt.Println((*changelog)[0].Summary)
-    } else if args[0] == "date" {
-      fmt.Println((*changelog)[0].Date)
-    }
-  }
+	checkRelease(changelog)
+	if len(args) > 0 {
+		if args[0] == "summary" {
+			fmt.Println((*changelog)[0].Summary)
+		} else if args[0] == "date" {
+			fmt.Println((*changelog)[0].Date)
+		}
+	}
 }
 
 func main() {
@@ -104,17 +104,17 @@ func main() {
 	var command string
 	var args []string
 	if len(os.Args) < 2 {
-	  command = DEFAULT_COMMAND
-	  args = []string(nil)
+		command = DEFAULT_COMMAND
+		args = []string(nil)
 	} else {
-	  command = os.Args[1]
-	  args = os.Args[2:]
+		command = os.Args[1]
+		args = os.Args[2:]
 	}
 	function := COMMAND_MAPPING[command]
 	if function != nil {
-	  function(changelog, args)
+		function(changelog, args)
 	} else {
-	  fmt.Printf("Command %s unknown\n", command)
-	  os.Exit(3)
+		fmt.Printf("Command %s unknown\n", command)
+		os.Exit(3)
 	}
 }

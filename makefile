@@ -2,6 +2,8 @@ NAME=changelog
 VERSION=0.1.0
 BUILD_DIR=build
 
+.phony: build
+
 build:
 	mkdir -p $(BUILD_DIR)
 	go build -o $(BUILD_DIR)/$(NAME)
