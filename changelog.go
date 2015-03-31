@@ -27,8 +27,7 @@ type ChangeLog []Release
 var REGEXP_FILENAME = regexp.MustCompile("^(?i)change(-|_)?log(.yml|.yaml)?$")
 var DEFAULT_COMMAND = "summary"
 var COMMAND_MAPPING = map[string]Command {
-  "summary": summary,
-  "date": date,
+  "release": release,
 }
 
 func readChangeLog() []byte {
@@ -66,12 +65,15 @@ func parseChangeLog(source []byte) *ChangeLog {
 //                 COMMANDS                 //
 //////////////////////////////////////////////
 
-func summary(changelog *ChangeLog, args []string) {
-  fmt.Println((*changelog)[0].Summary)
-}
-
-func date(changelog *ChangeLog, args []string) {
-  fmt.Println((*changelog)[0].Date)
+func release(changelog *ChangeLog, args []string) {
+  if len(args) > 0 {
+    if args[0] == "summary" {
+      fmt.Println((*changelog)[0].Summary)
+    } else if args[0] == "date" {
+      fmt.Println((*changelog)[0].Date)
+    }
+  } else {
+  }
 }
 
 func main() {
