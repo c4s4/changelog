@@ -8,7 +8,7 @@ import (
 	"regexp"
 )
 
-var REGEXP_FILENAME = regexp.MustCompile("^(?i)change(-|_)?log(.yml|.yaml)?$")
+type Command *func(ChangeLog, []string)
 
 type Release struct {
 	Version    string
@@ -23,6 +23,12 @@ type Release struct {
 }
 
 type ChangeLog []Release
+
+var REGEXP_FILENAME = regexp.MustCompile("^(?i)change(-|_)?log(.yml|.yaml)?$")
+var DEFAULT_COMMAND = "NO_COMMAND"
+var COMMAND_MAPPING = map[string]Command {
+  "summary": &summary,
+}
 
 func readChangeLog() []byte {
 	files, err := ioutil.ReadDir(".")
@@ -55,9 +61,26 @@ func parseChangeLog(source []byte) *ChangeLog {
 	return &changelog
 }
 
+func summary(changelog ChangeLog, args []string) {
+  fmt.Println(changelog[0].Summary)
+}
+
 func main() {
 	changelog := parseChangeLog(readChangeLog())
-	command := os.Args[0]
-	println(command)
-	fmt.Printf("Value: %#v\n", changelog)
+	var command string
+	var args []string
+	if len(os.Args) < 2 {
+	  command = DEFAULT_COMMAND
+	  args = []string(nil)
+	} else {
+	  command = os.Args[1]
+	  args = os.Args[2:]
+	}
+	function = COMMAND_MAPPING[command]
+	if function != nil {
+	  function(args)
+	} else {
+	  fmt.Printf("Command %s unknown", command)
+	  os.Exit(3)
+	}
 }
