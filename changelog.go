@@ -33,7 +33,7 @@ var ERROR_READING = 1
 var ERROR_PARSING = 2
 var ERROR_RELEASE = 3
 var REGEXP_DATE = regexp.MustCompile(`^\d\d\d\d-\d\d-\d\d$`)
-var REGEXP_VERSION = regexp.MustCompile(`^\d+(\.\d+)?(\.\d+)$`)
+var REGEXP_VERSION = regexp.MustCompile(`^\d+(\.\d+)?(\.\d+)?$`)
 
 func Error(code int, message string) {
 	fmt.Println(message)
