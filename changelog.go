@@ -8,7 +8,7 @@ import (
 	"regexp"
 )
 
-type Command func(*ChangeLog, []string)
+type Command func(*Changelog, []string)
 
 type Release struct {
 	Version    string
@@ -22,9 +22,9 @@ type Release struct {
 	Security   []string
 }
 
-type ChangeLog []Release
+type Changelog []Release
 
-var REGEXP_FILENAME = regexp.MustCompile("^(?i)change(-|_)?log(.yml|.yaml)?$")
+var REGEXP_FILENAME = regexp.MustCompile(`^(?i)change(-|_)?log(.yml|.yaml)?$`)
 var DEFAULT_COMMAND = "release"
 var COMMAND_MAPPING = map[string]Command{
 	"release": release,
@@ -32,34 +32,41 @@ var COMMAND_MAPPING = map[string]Command{
 var ERROR_READING = 1
 var ERROR_PARSING = 2
 var ERROR_RELEASE = 3
+var REGEXP_DATE = regexp.MustCompile(`^\d\d\d\d-\d\d-\d\d$`)
+var REGEXP_VERSION = regexp.MustCompile(`^\d+(\.\d+)?(\.\d+)$`)
 
-func readChangeLog() []byte {
+func Error(code int, message string) {
+	fmt.Println(message)
+	os.Exit(code)
+}
+
+func Errorf(code int, message string, args ...interface{}) {
+	Error(code, fmt.Sprintf(message, args...))
+}
+
+func readChangelog() []byte {
 	files, err := ioutil.ReadDir(".")
 	if err != nil {
-		fmt.Println("Could not list current directory")
-		os.Exit(ERROR_READING)
+		Error(ERROR_READING, "Could not list current directory")
 	}
 	for _, file := range files {
 		if !file.IsDir() && REGEXP_FILENAME.MatchString(file.Name()) {
 			source, err := ioutil.ReadFile(file.Name())
 			if err != nil {
-				fmt.Printf("Error reading changelog file '%s'\n", file.Name())
-				os.Exit(ERROR_READING)
+				Errorf(ERROR_READING, "Error reading changelog file '%s'\n", file.Name())
 			}
 			return source
 		}
 	}
-	fmt.Println("No changelog file found")
-	os.Exit(ERROR_READING)
+	Error(ERROR_READING, "No changelog file found")
 	return []byte{}
 }
 
-func parseChangeLog(source []byte) *ChangeLog {
-	var changelog ChangeLog
+func parseChangelog(source []byte) *Changelog {
+	var changelog Changelog
 	err := yaml.Unmarshal(source, &changelog)
 	if err != nil {
-		fmt.Printf("Error parsing changelog: %s\n", err)
-		os.Exit(ERROR_PARSING)
+		Errorf(ERROR_PARSING, "Error parsing changelog: %s\n", err.Error())
 	}
 	return &changelog
 }
@@ -68,28 +75,35 @@ func parseChangeLog(source []byte) *ChangeLog {
 //                                  COMMANDS                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-func checkRelease(changelog *ChangeLog) {
-	if len(*changelog) == 0 {
-		fmt.Println("Release is empy")
-		os.Exit(ERROR_RELEASE)
-	}
-	release := (*changelog)[0]
+func checkRelease(release Release) {
 	if release.Version == "" {
-		fmt.Println("Release version is empty")
-		os.Exit(ERROR_RELEASE)
+		Error(ERROR_RELEASE, "Release version is empty")
+	}
+	if !REGEXP_VERSION.MatchString(release.Version) {
+		Errorf(ERROR_RELEASE, "Release version '%s' is not a valid semantic version number", release.Version)
 	}
 	if release.Date == "" {
-		fmt.Println("Release date is empty")
-		os.Exit(ERROR_RELEASE)
+		Error(ERROR_RELEASE, "Release date is empty")
+	}
+	if !REGEXP_DATE.MatchString(release.Date) {
+		Errorf(ERROR_RELEASE, "Release date '%s' is not valid ISO format", release.Date)
 	}
 	if release.Summary == "" {
-		fmt.Println("Release summary is empty")
-		os.Exit(ERROR_RELEASE)
+		Error(ERROR_RELEASE, "Release summary is empty")
 	}
 }
 
-func release(changelog *ChangeLog, args []string) {
-	checkRelease(changelog)
+func checkChangelog(changelog *Changelog) {
+	if len(*changelog) == 0 {
+		Error(ERROR_RELEASE, "Release is empy")
+	}
+	for _, release := range *changelog {
+		checkRelease(release)
+	}
+}
+
+func release(changelog *Changelog, args []string) {
+	checkChangelog(changelog)
 	if len(args) > 0 {
 		if args[0] == "summary" {
 			fmt.Println((*changelog)[0].Summary)
@@ -100,7 +114,7 @@ func release(changelog *ChangeLog, args []string) {
 }
 
 func main() {
-	changelog := parseChangeLog(readChangeLog())
+	changelog := parseChangelog(readChangelog())
 	var command string
 	var args []string
 	if len(os.Args) < 2 {
