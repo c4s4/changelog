@@ -4,6 +4,9 @@ BUILD_DIR=build
 
 .PHONY: build
 
+test:
+	go test
+
 build:
 	mkdir -p $(BUILD_DIR)
 	go build -o $(BUILD_DIR)/$(NAME)
