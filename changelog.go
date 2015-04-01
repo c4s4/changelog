@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
+	"text/template"
 )
 
 type Command func(*Changelog, []string)
@@ -28,12 +29,71 @@ var REGEXP_FILENAME = regexp.MustCompile(`^(?i)change(-|_)?log(.yml|.yaml)?$`)
 var DEFAULT_COMMAND = "release"
 var COMMAND_MAPPING = map[string]Command{
 	"release": release,
+	"to":      to,
 }
 var ERROR_READING = 1
 var ERROR_PARSING = 2
 var ERROR_RELEASE = 3
+var ERROR_TO = 4
 var REGEXP_DATE = regexp.MustCompile(`^\d\d\d\d-\d\d-\d\d$`)
 var REGEXP_VERSION = regexp.MustCompile(`^\d+(\.\d+)?(\.\d+)?$`)
+var HTML_TEMPLATE = `<html>
+<body>
+<h1>Change Log</h1>
+{{ range $release := . }}
+<h2>Release {{ .Version }} ({{ .Date }})</h2>
+<p>{{ .Summary }}</p>
+{{ if .Added }}
+<h3>Added</h3>
+<ul>
+{{ range $entry := .Added }}
+<li>{{ . }}</li>
+{{ end }}
+</ul>
+{{ end }}
+{{ if .Changed }}
+<h3>Changed</h3>
+<ul>
+{{ range $entry := .Changed }}
+<li>{{ . }}</li>
+{{ end }}
+</ul>
+{{ end }}
+{{ if .Deprecated }}
+<h3>Deprecated</h3>
+<ul>
+{{ range $entry := .Deprecated }}
+<li>{{ . }}</li>
+{{ end }}
+</ul>
+{{ end }}
+{{ if .Removed }}
+<h3>Removed</h3>
+<ul>
+{{ range $entry := .Removed }}
+<li>{{ . }}</li>
+{{ end }}
+</ul>
+{{ end }}
+{{ if .Fixed }}
+<h3>Fixed</h3>
+<ul>
+{{ range $entry := .Fixed }}
+<li>{{ . }}</li>
+{{ end }}
+</ul>
+{{ end }}
+{{ if .Security }}
+<h3>Security</h3>
+<ul>
+{{ range $entry := .Security }}
+<li>{{ . }}</li>
+{{ end }}
+</ul>
+{{ end }}
+{{ end }}
+</body>
+</html>`
 
 func Error(code int, message string) {
 	fmt.Println(message)
@@ -111,6 +171,26 @@ func release(changelog *Changelog, args []string) {
 			fmt.Println((*changelog)[0].Date)
 		}
 	}
+}
+
+func toHtml(changelog *Changelog) {
+	t := template.Must(template.New("changelog").Parse(HTML_TEMPLATE))
+	err := t.Execute(os.Stdout, changelog)
+	if err != nil {
+		Errorf(ERROR_TO, "Error processing template: %s", err)
+	}
+}
+
+func to(changelog *Changelog, args []string) {
+	checkChangelog(changelog)
+	if len(args) != 1 {
+		Error(ERROR_TO, "You must pass format to convert to")
+	}
+	format := args[0]
+	if format != "html" {
+		Errorf(ERROR_TO, "Unknown format %s", args[0])
+	}
+	toHtml(changelog)
 }
 
 func main() {
