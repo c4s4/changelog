@@ -1,6 +1,7 @@
 NAME=changelog
 VERSION=0.1.0
 BUILD_DIR=build
+TEST_DIR=test
 
 .PHONY: build test
 
@@ -8,7 +9,7 @@ test:
 	go test
 
 html: build
-	$(BUILD_DIR)/$(NAME) to html test/stylesheet.css > $(BUILD_DIR)/changelog.html
+	cd $(TEST_DIR) && ../$(BUILD_DIR)/$(NAME) to html stylesheet.css > ../$(BUILD_DIR)/changelog.html
 
 build:
 	mkdir -p $(BUILD_DIR)
