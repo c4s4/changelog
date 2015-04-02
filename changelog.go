@@ -115,21 +115,32 @@ func Errorf(code int, message string, args ...interface{}) {
 }
 
 func readChangelog() []byte {
-	files, err := ioutil.ReadDir(".")
-	if err != nil {
-		Error(ERROR_READING, "Could not list current directory")
-	}
-	for _, file := range files {
-		if !file.IsDir() && REGEXP_FILENAME.MatchString(file.Name()) {
-			source, err := ioutil.ReadFile(file.Name())
-			if err != nil {
-				Errorf(ERROR_READING, "Error reading changelog file '%s'\n", file.Name())
-			}
-			return source
+	stat, _ := os.Stdin.Stat()
+	if (stat.Mode() & os.ModeCharDevice) == 0 {
+		// data is being piped to stdin
+		source, err := ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			Error(ERROR_READING, "Error reading changelog from stdin")
 		}
+		return source
+	} else {
+		// look for changelog in current directory
+		files, err := ioutil.ReadDir(".")
+		if err != nil {
+			Error(ERROR_READING, "Could not list current directory")
+		}
+		for _, file := range files {
+			if !file.IsDir() && REGEXP_FILENAME.MatchString(file.Name()) {
+				source, err := ioutil.ReadFile(file.Name())
+				if err != nil {
+					Errorf(ERROR_READING, "Error reading changelog file '%s'\n", file.Name())
+				}
+				return source
+			}
+		}
+		Error(ERROR_READING, "No changelog file found")
+		return []byte{}
 	}
-	Error(ERROR_READING, "No changelog file found")
-	return []byte{}
 }
 
 func parseChangelog(source []byte) *Changelog {
