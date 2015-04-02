@@ -37,10 +37,20 @@ var ERROR_RELEASE = 3
 var ERROR_TO = 4
 var REGEXP_DATE = regexp.MustCompile(`^\d\d\d\d-\d\d-\d\d$`)
 var REGEXP_VERSION = regexp.MustCompile(`^\d+(\.\d+)?(\.\d+)?$`)
-var HTML_TEMPLATE = `<html>
+var HTML_TEMPLATE = `<!DOCTYPE html>
+<html>
+<head>
+<title>Change Log</title>
+<meta charset="utf-8">
+{{ range $stylesheet := .Stylesheets }}
+<style type="text/css">
+{{ $stylesheet }}
+</style>
+{{ end }}
+</head>
 <body>
 <h1>Change Log</h1>
-{{ range $release := . }}
+{{ range $release := .Changelog }}
 <h2>Release {{ .Version }} ({{ .Date }})</h2>
 <p>{{ .Summary }}</p>
 {{ if .Added }}
@@ -96,7 +106,7 @@ var HTML_TEMPLATE = `<html>
 </html>`
 
 func Error(code int, message string) {
-	fmt.Println(message)
+	fmt.Fprintln(os.Stderr, message)
 	os.Exit(code)
 }
 
@@ -169,13 +179,34 @@ func release(changelog *Changelog, args []string) {
 			fmt.Println((*changelog)[0].Summary)
 		} else if args[0] == "date" {
 			fmt.Println((*changelog)[0].Date)
+		} else if args[0] == "version" {
+			fmt.Println((*changelog)[0].Version)
+		} else {
+			Errorf(ERROR_RELEASE, "Unknown release argument %s", args[0])
 		}
 	}
 }
 
-func toHtml(changelog *Changelog) {
+type HtmlTemplateData struct {
+	Changelog   *Changelog
+	Stylesheets []string
+}
+
+func toHtml(changelog *Changelog, args []string) {
+	stylesheets := make([]string, 0)
+	for _, file := range args {
+		stylesheet, err := ioutil.ReadFile(file)
+		if err != nil {
+			Errorf(ERROR_TO, "Error loading stylesheet %s: %s", file, err.Error())
+		}
+		stylesheets = append(stylesheets, string(stylesheet))
+	}
+	data := HtmlTemplateData{
+		Stylesheets: stylesheets,
+		Changelog:   changelog,
+	}
 	t := template.Must(template.New("changelog").Parse(HTML_TEMPLATE))
-	err := t.Execute(os.Stdout, changelog)
+	err := t.Execute(os.Stdout, data)
 	if err != nil {
 		Errorf(ERROR_TO, "Error processing template: %s", err)
 	}
@@ -183,14 +214,14 @@ func toHtml(changelog *Changelog) {
 
 func to(changelog *Changelog, args []string) {
 	checkChangelog(changelog)
-	if len(args) != 1 {
+	if len(args) < 1 {
 		Error(ERROR_TO, "You must pass format to convert to")
 	}
 	format := args[0]
 	if format != "html" {
 		Errorf(ERROR_TO, "Unknown format %s", args[0])
 	}
-	toHtml(changelog)
+	toHtml(changelog, args[1:])
 }
 
 func main() {
