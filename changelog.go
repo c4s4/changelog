@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"text/template"
+	"time"
 )
 
 type Command func(*Changelog, []string)
@@ -189,7 +190,14 @@ func release(changelog *Changelog, args []string) {
 		if args[0] == "summary" {
 			fmt.Println((*changelog)[0].Summary)
 		} else if args[0] == "date" {
-			fmt.Println((*changelog)[0].Date)
+			if len(args) > 1 {
+				date := time.Now().Local().Format("2006-01-02")
+				if date != (*changelog)[0].Date {
+					Errorf(ERROR_RELEASE, "Release date %s is wrong (should be %s)", (*changelog)[0].Date, date)
+				}
+			} else {
+				fmt.Println((*changelog)[0].Date)
+			}
 		} else if args[0] == "version" {
 			fmt.Println((*changelog)[0].Version)
 		} else {
