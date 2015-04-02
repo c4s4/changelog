@@ -6,11 +6,15 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
-	"text/template"
-	"time"
 )
 
 type Command func(*Changelog, []string)
+
+var COMMAND_MAPPING = map[string]Command{
+	"help":    help,
+	"release": release,
+	"to":      transform,
+}
 
 type Release struct {
 	Version    string
@@ -26,85 +30,31 @@ type Release struct {
 
 type Changelog []Release
 
+const (
+	ERROR_READING   = 1
+	ERROR_PARSING   = 2
+	ERROR_RELEASE   = 3
+	ERROR_TRANSFORM = 4
+	HELP            = `Manage semantic changelog
+
+  changelog                      Print this help screen
+      +---- release              Check for release
+      |        +--- date         Print release date
+      |        |      +- check   Check that release date wright
+      |        +--- version      Print release version
+      |        +--- summary      Print release summary
+      +---- to html              Transform changelog to html
+
+The changelog file is searched in current directory. To use a
+different changelog, use < character with its path:
+
+  changelog release < path/to/changelog.yml
+
+will check for release a changelog in 'path/to' directory.`
+	DEFAULT_COMMAND = "help"
+)
+
 var REGEXP_FILENAME = regexp.MustCompile(`^(?i)change(-|_)?log(.yml|.yaml)?$`)
-var DEFAULT_COMMAND = "release"
-var COMMAND_MAPPING = map[string]Command{
-	"release": release,
-	"to":      to,
-}
-var ERROR_READING = 1
-var ERROR_PARSING = 2
-var ERROR_RELEASE = 3
-var ERROR_TO = 4
-var REGEXP_DATE = regexp.MustCompile(`^\d\d\d\d-\d\d-\d\d$`)
-var REGEXP_VERSION = regexp.MustCompile(`^\d+(\.\d+)?(\.\d+)?$`)
-var HTML_TEMPLATE = `<!DOCTYPE html>
-<html>
-<head>
-<title>Change Log</title>
-<meta charset="utf-8">
-{{ range $stylesheet := .Stylesheets }}
-<style type="text/css">
-{{ $stylesheet }}
-</style>
-{{ end }}
-</head>
-<body>
-<h1>Change Log</h1>
-{{ range $release := .Changelog }}
-<h2>Release {{ .Version }} ({{ .Date }})</h2>
-<p>{{ .Summary }}</p>
-{{ if .Added }}
-<h3>Added</h3>
-<ul>
-{{ range $entry := .Added }}
-<li>{{ . }}</li>
-{{ end }}
-</ul>
-{{ end }}
-{{ if .Changed }}
-<h3>Changed</h3>
-<ul>
-{{ range $entry := .Changed }}
-<li>{{ . }}</li>
-{{ end }}
-</ul>
-{{ end }}
-{{ if .Deprecated }}
-<h3>Deprecated</h3>
-<ul>
-{{ range $entry := .Deprecated }}
-<li>{{ . }}</li>
-{{ end }}
-</ul>
-{{ end }}
-{{ if .Removed }}
-<h3>Removed</h3>
-<ul>
-{{ range $entry := .Removed }}
-<li>{{ . }}</li>
-{{ end }}
-</ul>
-{{ end }}
-{{ if .Fixed }}
-<h3>Fixed</h3>
-<ul>
-{{ range $entry := .Fixed }}
-<li>{{ . }}</li>
-{{ end }}
-</ul>
-{{ end }}
-{{ if .Security }}
-<h3>Security</h3>
-<ul>
-{{ range $entry := .Security }}
-<li>{{ . }}</li>
-{{ end }}
-</ul>
-{{ end }}
-{{ end }}
-</body>
-</html>`
 
 func Error(code int, message string) {
 	fmt.Fprintln(os.Stderr, message)
@@ -153,94 +103,9 @@ func parseChangelog(source []byte) *Changelog {
 	return &changelog
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//                                  COMMANDS                                  //
-////////////////////////////////////////////////////////////////////////////////
-
-func checkRelease(release Release) {
-	if release.Version == "" {
-		Error(ERROR_RELEASE, "Release version is empty")
-	}
-	if !REGEXP_VERSION.MatchString(release.Version) {
-		Errorf(ERROR_RELEASE, "Release version '%s' is not a valid semantic version number", release.Version)
-	}
-	if release.Date == "" {
-		Error(ERROR_RELEASE, "Release date is empty")
-	}
-	if !REGEXP_DATE.MatchString(release.Date) {
-		Errorf(ERROR_RELEASE, "Release date '%s' is not valid ISO format", release.Date)
-	}
-	if release.Summary == "" {
-		Error(ERROR_RELEASE, "Release summary is empty")
-	}
-}
-
-func checkChangelog(changelog *Changelog) {
-	if len(*changelog) == 0 {
-		Error(ERROR_RELEASE, "Release is empy")
-	}
-	for _, release := range *changelog {
-		checkRelease(release)
-	}
-}
-
-func release(changelog *Changelog, args []string) {
-	checkChangelog(changelog)
-	if len(args) > 0 {
-		if args[0] == "summary" {
-			fmt.Println((*changelog)[0].Summary)
-		} else if args[0] == "date" {
-			if len(args) > 1 {
-				date := time.Now().Local().Format("2006-01-02")
-				if date != (*changelog)[0].Date {
-					Errorf(ERROR_RELEASE, "Release date %s is wrong (should be %s)", (*changelog)[0].Date, date)
-				}
-			} else {
-				fmt.Println((*changelog)[0].Date)
-			}
-		} else if args[0] == "version" {
-			fmt.Println((*changelog)[0].Version)
-		} else {
-			Errorf(ERROR_RELEASE, "Unknown release argument %s", args[0])
-		}
-	}
-}
-
-type HtmlTemplateData struct {
-	Changelog   *Changelog
-	Stylesheets []string
-}
-
-func toHtml(changelog *Changelog, args []string) {
-	stylesheets := make([]string, 0)
-	for _, file := range args {
-		stylesheet, err := ioutil.ReadFile(file)
-		if err != nil {
-			Errorf(ERROR_TO, "Error loading stylesheet %s: %s", file, err.Error())
-		}
-		stylesheets = append(stylesheets, string(stylesheet))
-	}
-	data := HtmlTemplateData{
-		Stylesheets: stylesheets,
-		Changelog:   changelog,
-	}
-	t := template.Must(template.New("changelog").Parse(HTML_TEMPLATE))
-	err := t.Execute(os.Stdout, data)
-	if err != nil {
-		Errorf(ERROR_TO, "Error processing template: %s", err)
-	}
-}
-
-func to(changelog *Changelog, args []string) {
-	checkChangelog(changelog)
-	if len(args) < 1 {
-		Error(ERROR_TO, "You must pass format to convert to")
-	}
-	format := args[0]
-	if format != "html" {
-		Errorf(ERROR_TO, "Unknown format %s", args[0])
-	}
-	toHtml(changelog, args[1:])
+func help(changelog *Changelog, args []string) {
+	fmt.Println(HELP)
+	os.Exit(0)
 }
 
 func main() {
@@ -249,7 +114,6 @@ func main() {
 	var args []string
 	if len(os.Args) < 2 {
 		command = DEFAULT_COMMAND
-		args = []string(nil)
 	} else {
 		command = os.Args[1]
 		args = os.Args[2:]
