@@ -9,7 +9,7 @@ test:
 	go test
 
 html: build
-	cd $(TEST_DIR) && ../$(BUILD_DIR)/$(NAME) to html stylesheet.css > ../$(BUILD_DIR)/changelog.html
+	$(BUILD_DIR)/$(NAME) to html $(TEST_DIR)/stylesheet.css < $(TEST_DIR)/CHANGELOG.yml > $(BUILD_DIR)/changelog.html
 
 build:
 	mkdir -p $(BUILD_DIR)
