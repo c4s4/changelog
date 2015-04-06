@@ -44,6 +44,8 @@ const (
       |        +--- version      Print release version
       |        +--- summary      Print release summary
       +---- to html              Transform changelog to html
+	           +--- stylesheet   Transform tp html with a stylesheet
+			                     ('style' uses a default stylesheet)
 
 The changelog file is searched in current directory. To use a
 different changelog, use < character with its path:
