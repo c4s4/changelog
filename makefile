@@ -1,9 +1,19 @@
 NAME=changelog
 VERSION=0.1.0
 BUILD_DIR=build
+TEST_DIR=test
 
-run:
-	go run $(NAME).go
+.PHONY: build test
+
+test:
+	go test
+
+build:
+	mkdir -p $(BUILD_DIR)
+	go build -o $(BUILD_DIR)/$(NAME)
+
+release: test build
+	release ̀`changelog release version`
 
 clean:
 	rm -rf $(BUILD_DIR)
