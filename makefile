@@ -13,7 +13,7 @@ build:
 	go build -o $(BUILD_DIR)/$(NAME)
 
 release: test build
-	release ̀`changelog release version`
+	release ̀"`$(BUILD_DIR)/changelog release version`"
 
 clean:
 	rm -rf $(BUILD_DIR)
