@@ -8,15 +8,12 @@ TEST_DIR=test
 test:
 	go test
 
-html: build
-	$(BUILD_DIR)/$(NAME) to html $(TEST_DIR)/stylesheet.css < $(TEST_DIR)/CHANGELOG.yml > $(BUILD_DIR)/changelog.html
-
 build:
 	mkdir -p $(BUILD_DIR)
 	go build -o $(BUILD_DIR)/$(NAME)
 
-run: build
-	$(BUILD_DIR)/$(NAME)
+release: test build
+	release ̀`changelog release version`
 
 clean:
 	rm -rf $(BUILD_DIR)
