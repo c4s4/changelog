@@ -23,9 +23,6 @@ func checkRelease(release Release) {
 	if !REGEXP_DATE.MatchString(release.Date) {
 		Errorf(ERROR_RELEASE, "Release date '%s' is not valid ISO format", release.Date)
 	}
-	if release.Summary == "" {
-		Error(ERROR_RELEASE, "Release summary is empty")
-	}
 }
 
 func checkChangelog(changelog *Changelog) {

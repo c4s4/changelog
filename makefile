@@ -15,8 +15,8 @@ build:
 	mkdir -p $(BUILD_DIR)
 	go build -o $(BUILD_DIR)/$(NAME)
 
-run: build
-	$(BUILD_DIR)/$(NAME)
+install: build
+	sudo cp $(BUILD_DIR)/$(NAME) /opt/bin/
 
 clean:
 	rm -rf $(BUILD_DIR)
