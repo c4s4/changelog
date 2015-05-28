@@ -38,14 +38,14 @@ const (
 	HELP            = `Manage semantic changelog
 
   changelog                      Print this help screen
-      +---- release              Check for release
-      |        +--- date         Print release date
-      |        |      +- check   Check that release date wright
-      |        +--- version      Print release version
-      |        +--- summary      Print release summary
-      +---- to html              Transform changelog to html
-	           +--- stylesheet   Transform tp html with a stylesheet
-			                     ('style' uses a default stylesheet)
+  changelog release              Check for release
+  changelog release date         Print release date
+  changelog release date check   Check that release date wright
+  changelog release version      Print release version
+  changelog release summary      Print release summary
+  changelog to html              Transform changelog to html
+  changelog to html stylesheet   Transform tp html with a stylesheet
+                                 ('style' uses a default stylesheet)
 
 The changelog file is searched in current directory. To use a
 different changelog, use < character with its path:
@@ -53,7 +53,7 @@ different changelog, use < character with its path:
   changelog release < path/to/changelog.yml
 
 will check for release a changelog in 'path/to' directory.`
-	DEFAULT_COMMAND = "help"
+	HELP_COMMAND = "help"
 )
 
 var REGEXP_FILENAME = regexp.MustCompile(`^(?i)change(-|_)?log(.yml|.yaml)?$`)
@@ -111,12 +111,13 @@ func help(changelog *Changelog, args []string) {
 }
 
 func main() {
-	changelog := parseChangelog(readChangelog())
+	var changelog *Changelog
 	var command string
 	var args []string
 	if len(os.Args) < 2 {
-		command = DEFAULT_COMMAND
+		command = HELP_COMMAND
 	} else {
+		changelog = parseChangelog(readChangelog())
 		command = os.Args[1]
 		args = os.Args[2:]
 	}
@@ -125,6 +126,6 @@ func main() {
 		function(changelog, args)
 	} else {
 		fmt.Printf("Command %s unknown\n", command)
-		os.Exit(3)
+		os.Exit(ERROR_READING)
 	}
 }
