@@ -3,7 +3,8 @@ VERSION=0.1.0
 BUILD_DIR=build
 TEST_DIR=test
 
-YELLOW=\033[93m
+YELLOW=\033[1m\033[93m
+CYAN=\033[1m\033[96m
 CLEAR=\033[0m
 
 .PHONY: build test
@@ -27,8 +28,8 @@ clean:
 
 help:
 	@echo "$(YELLOW)Print help$(CLEAR)"
-	@echo "$(YELLOW)test$(CLEAR)    Run unit tests"
-	@echo "$(YELLOW)build$(CLEAR)   Build executable"
-	@echo "$(YELLOW)release$(CLEAR) Make a release"
-	@echo "$(YELLOW)clean$(CLEAR)   Clean generated files"
-	@echo "$(YELLOW)help$(CLEAR)    Print this help screen"
+	@echo "$(CYAN)test$(CLEAR)    Run unit tests"
+	@echo "$(CYAN)build$(CLEAR)   Build executable"
+	@echo "$(CYAN)release$(CLEAR) Make a release"
+	@echo "$(CYAN)clean$(CLEAR)   Clean generated files"
+	@echo "$(CYAN)help$(CLEAR)    Print this help screen"
