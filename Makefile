@@ -28,7 +28,7 @@ archive: clean
 
 release: test archive
 	@echo "$(YELLOW)Releasing version $(VERSION)$(CLEAR)"
-	release ̀"`$(BUILD_DIR)/changelog release version`"
+	release
 
 clean:
 	@echo "$(YELLOW)Cleaning generated files$(CLEAR)"
