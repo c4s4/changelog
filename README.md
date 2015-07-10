@@ -53,6 +53,25 @@ To get help about this tool, just type:
     
     will check for release a changelog in 'path/to' directory.
 
+Installation
+------------
+
+To install *changelog*, you can :
+
+### Install binary
+
+Download latest binary archive at <https://github.com/c4s4/changelog/releases>. Unzip the archivei, put the binary of your platform somewhere in your *PATH* and rename it *changelog*.
+
+### Build from sources
+
+Get the project master and build the binary :
+
+        git clone git@github.com:c4s4/changelog
+        cd changelog
+        go build
+
+This will generate a *changelog* binary for your platform. Put this binary somewhere in your *PATH*.
+
 Changelog Format
 ----------------
 

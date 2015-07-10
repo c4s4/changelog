@@ -3,6 +3,7 @@
   summary: Added binary distribution archive
   added:
   - "Added target archive to generate a binary distribution archive."
+  - "Improved documentation, adding a section about installation."
 
 - version: 1.0.0
   date:    2015-05-28
