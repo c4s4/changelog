@@ -1,6 +1,9 @@
 Changelog
 =========
 
+- Project : <https://github.com/c4s4/changelog>.
+- Downloads : <https://github.com/c4s4/changelog/releases>.
+
 This is a tool to manage semantic changelogs. A semantic change log is a YAML file where you can extract information regarding releases, such as version, date or summary. Here is a sample semantic changelog:
 
     - version: 1.0.0
