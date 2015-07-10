@@ -1,5 +1,5 @@
 NAME=changelog
-VERSION=0.1.0
+VERSION=$(shell changelog release version)
 BUILD_DIR=build
 TEST_DIR=test
 
@@ -18,7 +18,14 @@ build:
 	mkdir -p $(BUILD_DIR)
 	go build -o $(BUILD_DIR)/$(NAME)
 
-release: test build
+archive: clean
+	@echo "$(YELLOW)Building executable$(CLEAR)"
+	mkdir -p $(BUILD_DIR)/$(NAME)-$(VERSION)/
+	gox -output=$(BUILD_DIR)/$(NAME)-$(VERSION)/{{.Dir}}_{{.OS}}_{{.Arch}}
+	cp README.md LICENSE.txt $(BUILD_DIR)/$(NAME)-$(VERSION)/
+	cd $(BUILD_DIR) && tar cvzf $(NAME)-bin-$(VERSION).tar.gz $(NAME)-$(VERSION)
+
+release: test archive
 	@echo "$(YELLOW)Releasing version $(VERSION)$(CLEAR)"
 	release ̀"`$(BUILD_DIR)/changelog release version`"
 
@@ -30,6 +37,7 @@ help:
 	@echo "$(YELLOW)Print help$(CLEAR)"
 	@echo "$(CYAN)test$(CLEAR)    Run unit tests"
 	@echo "$(CYAN)build$(CLEAR)   Build executable"
+	@echo "$(CYAN)archive$(CLEAR) Build binary archive"
 	@echo "$(CYAN)release$(CLEAR) Make a release"
 	@echo "$(CYAN)clean$(CLEAR)   Clean generated files"
 	@echo "$(CYAN)help$(CLEAR)    Print this help screen"
