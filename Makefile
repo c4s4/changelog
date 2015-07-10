@@ -22,7 +22,8 @@ archive: clean
 	@echo "$(YELLOW)Building executable$(CLEAR)"
 	mkdir -p $(BUILD_DIR)/$(NAME)-$(VERSION)/
 	gox -output=$(BUILD_DIR)/$(NAME)-$(VERSION)/{{.Dir}}_{{.OS}}_{{.Arch}}
-	cp README.md LICENSE.txt $(BUILD_DIR)/$(NAME)-$(VERSION)/
+	cp LICENSE.txt $(BUILD_DIR)/$(NAME)-$(VERSION)/
+	cp README.md $(BUILD_DIR)/ && cd $(BUILD_DIR) && md2pdf README.md && cp README.pdf $(NAME)-$(VERSION)/
 	cd $(BUILD_DIR) && tar cvzf $(NAME)-bin-$(VERSION).tar.gz $(NAME)-$(VERSION)
 
 release: test archive
