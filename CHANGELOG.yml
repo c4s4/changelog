@@ -1,3 +1,9 @@
+- version: 1.0.1
+  date:    2015-07-10
+  summary: Added binary distribution archive
+  added:
+  - "Added target archive to generate a binary distribution archive."
+
 - version: 1.0.0
   date:    2015-05-28
   summary: First release
