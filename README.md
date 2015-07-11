@@ -60,7 +60,7 @@ To install *changelog*, you can :
 
 ### Install binary
 
-Download latest binary archive at <https://github.com/c4s4/changelog/releases>. Unzip the archivei, put the binary of your platform somewhere in your *PATH* and rename it *changelog*.
+Download latest binary archive at <https://github.com/c4s4/changelog/releases>. Unzip the archive, put the binary of your platform somewhere in your *PATH* and rename it *changelog*.
 
 ### Build from sources
 
