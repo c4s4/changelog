@@ -42,7 +42,7 @@ func TestVersionRegexp(t *testing.T) {
 			t.Errorf("Version %s should be valid", version)
 		}
 	}
-	var failingVersions = []string{" 1.2.3", "1.2.3 ", "1.2.3.4", ""}
+	var failingVersions = []string{" 1.2.3", "1.2.3 ", ""}
 	for _, version := range failingVersions {
 		if REGEXP_VERSION.MatchString(version) {
 			t.Errorf("Version %s should not be valid", version)

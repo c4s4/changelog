@@ -1,3 +1,9 @@
+- version: 1.0.2
+  date:    2016-04-15
+  summary: Version might have more than three figures
+  fixed:
+  - "Version might have more than three figures (SQLI fix)"
+
 - version: 1.0.1
   date:    2015-07-10
   summary: Added binary distribution archive
