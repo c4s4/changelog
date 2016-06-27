@@ -46,6 +46,7 @@ const (
   changelog to html              Transform changelog to html
   changelog to html stylesheet   Transform tp html with a stylesheet
                                  ('style' uses a default stylesheet)
+  changelog to markdown          Transform changelog to markdown
 
 The changelog file is searched in current directory. To use a
 different changelog, use < character with its path:

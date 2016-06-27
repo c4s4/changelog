@@ -527,7 +527,7 @@ pre code, pre tt {
 `
 )
 
-type HtmlTemplateData struct {
+type TemplateData struct {
 	Changelog   *Changelog
 	Stylesheets []string
 }
@@ -547,11 +547,23 @@ func toHtml(changelog *Changelog, args []string) {
 		}
 		stylesheets = append(stylesheets, string(stylesheet))
 	}
-	data := HtmlTemplateData{
+	data := TemplateData{
 		Stylesheets: stylesheets,
 		Changelog:   changelog,
 	}
 	t := template.Must(template.New("changelog").Parse(HTML_TEMPLATE))
+	err := t.Execute(os.Stdout, data)
+	if err != nil {
+		Errorf(ERROR_TRANSFORM, "Error processing template: %s", err)
+	}
+}
+
+func toMarkdown(changelog *Changelog) {
+	data := TemplateData{
+		Stylesheets: nil,
+		Changelog:   changelog,
+	}
+	t := template.Must(template.New("changelog").Parse(MD_TEMPLATE))
 	err := t.Execute(os.Stdout, data)
 	if err != nil {
 		Errorf(ERROR_TRANSFORM, "Error processing template: %s", err)
@@ -564,8 +576,11 @@ func transform(changelog *Changelog, args []string) {
 		Error(ERROR_TRANSFORM, "You must pass format to transform to")
 	}
 	format := args[0]
-	if format != "html" {
-		Errorf(ERROR_TRANSFORM, "Unknown format %s", args[0])
-	}
-	toHtml(changelog, args[1:])
+	if format == "html" {
+     toHtml(changelog, args[1:])
+	} else if format == "markdown" {
+     toMarkdown(changelog)
+  } else {
+      Errorf(ERROR_TRANSFORM, "Unknown format %s", args[0])
+   }
 }

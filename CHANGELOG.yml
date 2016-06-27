@@ -1,8 +1,14 @@
+- version: 1.1.0
+  date:    2016-06-27
+  summary: Markdown output
+  added:
+  - "Added Markdown format support for output."
+
 - version: 1.0.2
   date:    2016-04-15
   summary: Version might have more than three figures
   fixed:
-  - "Version might have more than three figures (SQLI fix)"
+  - "Version might have more than three figures (SQLI fix)."
 
 - version: 1.0.1
   date:    2015-07-10
