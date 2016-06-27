@@ -7,7 +7,7 @@ import (
 )
 
 var REGEXP_DATE = regexp.MustCompile(`^\d\d\d\d-\d\d-\d\d$`)
-var REGEXP_VERSION = regexp.MustCompile(`^\d+(\.\d+)?(\.\d+)?$`)
+var REGEXP_VERSION = regexp.MustCompile(`^\d+(\.\d+)*$`)
 
 func checkRelease(release Release) {
 	if release.Version == "" {

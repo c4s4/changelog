@@ -43,8 +43,9 @@ To get help about this tool, just type:
       changelog release version      Print release version
       changelog release summary      Print release summary
       changelog to html              Transform changelog to html
-      changelog to html stylesheet   Transform tp html with a stylesheet
+      changelog to html stylesheet   Transform to html with a stylesheet
                                      ('style' uses a default stylesheet)
+      changelog to markdown          Transform changelog to markdown
     
     The changelog file is searched in current directory. To use a
     different changelog, use < character with its path:
@@ -60,7 +61,7 @@ To install *changelog*, you can :
 
 ### Install binary
 
-Download latest binary archive at <https://github.com/c4s4/changelog/releases>. Unzip the archivei, put the binary of your platform somewhere in your *PATH* and rename it *changelog*.
+Download latest binary archive at <https://github.com/c4s4/changelog/releases>. Unzip the archive, put the binary of your platform somewhere in your *PATH* and rename it *changelog*.
 
 ### Build from sources
 
