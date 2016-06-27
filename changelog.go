@@ -44,7 +44,7 @@ const (
   changelog release version      Print release version
   changelog release summary      Print release summary
   changelog to html              Transform changelog to html
-  changelog to html stylesheet   Transform tp html with a stylesheet
+  changelog to html stylesheet   Transform to html with a stylesheet
                                  ('style' uses a default stylesheet)
   changelog to markdown          Transform changelog to markdown
 
