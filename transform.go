@@ -491,8 +491,8 @@ pre code, pre tt {
 {{ end }}{{ end }}{{ if .Security }}### Security
 
 {{ range $entry := .Security }}- {{ . }}
-{{ end }}{{ end }}{{ end }}
-`
+{{ end }}{{ end }}
+{{ end }}`
 )
 
 type TemplateData struct {
