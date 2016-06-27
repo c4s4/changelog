@@ -471,38 +471,27 @@ pre code, pre tt {
 
 {{ range $release := .Changelog }}## Release {{ .Version }} ({{ .Date }})
 
-{{ .Summary }}
+{{ if .Summary }}{{ .Summary }}{{ end }}
 
 {{ if .Added }}### Added
 
 {{ range $entry := .Added }}- {{ . }}
-{{ end }}{{ end }}
-
-{{ if .Changed }}### Changed
+{{ end }}{{ end }}{{ if .Changed }}### Changed
 
 {{ range $entry := .Changed }}- {{ . }}
-{{ end }}{{ end }}
-
-{{ if .Deprecated }}### Deprecated
+{{ end }}{{ end }}{{ if .Deprecated }}### Deprecated
 
 {{ range $entry := .Deprecated }}- {{ . }}
-{{ end }}{{ end }}
-
-{{ if .Removed }}### Removed
+{{ end }}{{ end }}{{ if .Removed }}### Removed
 
 {{ range $entry := .Removed }}- {{ . }}
-{{ end }}{{ end }}
-
-{{ if .Fixed }}### Fixed
+{{ end }}{{ end }}{{ if .Fixed }}### Fixed
 
 {{ range $entry := .Fixed }}- {{ . }}
-{{ end }}{{ end }}
-
-{{ if .Security }}### Security
+{{ end }}{{ end }}{{ if .Security }}### Security
 
 {{ range $entry := .Security }}- {{ . }}
-{{ end }}{{ end }}{{ end }}
-`
+{{ end }}{{ end }}{{ end }}`
 )
 
 type TemplateData struct {
