@@ -1,44 +1,49 @@
-NAME=changelog
+NAME="changelog"
 VERSION=$(shell changelog release version)
-BUILD_DIR=build
-TEST_DIR=test
+BUILD_DIR="build"
 
 YELLOW=\033[1m\033[93m
 CYAN=\033[1m\033[96m
 CLEAR=\033[0m
 
-.PHONY: build test
+.PHONY: build
+
+help:
+	@echo "$(YELLOW)Help page$(CLEAR)"
+	@echo "$(CYAN)help$(CLEAR)     Print this help page"
+	@echo "$(CYAN)deps$(CLEAR)     Install GO dependencies"
+	@echo "$(CYAN)build$(CLEAR)    Build the application"
+	@echo "$(CYAN)archive$(CLEAR)  Build the distribution archive"
+	@echo "$(CYAN)release$(CLEAR)  Release project" 
+	@echo "$(CYAN)clean$(CLEAR)    Clean generated file"
+
+deps:
+	@echo "$(YELLOW)Installing GO dependencies$(CLEAR)"
+	go get gopkg.in/yaml.v1
+	go get github.com/mitchellh/gox
 
 test:
-	@echo "$(YELLOW)Running unit tests$(CLEAR)"
+	@echo "$(YELLOW)Running tests$(CLEAR)"
 	go test
 
-build:
-	@echo "$(YELLOW)Building executable$(CLEAR)"
+build: clean test
+	@echo "$(YELLOW)Building application$(CLEAR)"
 	mkdir -p $(BUILD_DIR)
 	go build -o $(BUILD_DIR)/$(NAME)
 
-archive: clean
-	@echo "$(YELLOW)Building executable$(CLEAR)"
-	mkdir -p $(BUILD_DIR)/$(NAME)-$(VERSION)/
-	gox -output=$(BUILD_DIR)/$(NAME)-$(VERSION)/{{.Dir}}_{{.OS}}_{{.Arch}}
+archive: build
+	@echo "$(YELLOW)Building distribution archive$(CLEAR)"
+	mkdir -p $(BUILD_DIR)/$(NAME)-$(VERSION)/bin/
+	gox -output=$(BUILD_DIR)/$(NAME)-$(VERSION)/bin/{{.Dir}}_{{.OS}}_{{.Arch}}
 	cp LICENSE.txt $(BUILD_DIR)/$(NAME)-$(VERSION)/
 	cp README.md $(BUILD_DIR)/ && cd $(BUILD_DIR) && md2pdf README.md && cp README.pdf $(NAME)-$(VERSION)/
+	cp CHANGELOG.yml $(BUILD_DIR)/ && cd $(BUILD_DIR) && changelog to html style > $(NAME)-$(VERSION)/CHANGELOG.html
 	cd $(BUILD_DIR) && tar cvzf $(NAME)-bin-$(VERSION).tar.gz $(NAME)-$(VERSION)
 
-release: test archive
-	@echo "$(YELLOW)Releasing version $(VERSION)$(CLEAR)"
+release: archive
+	@echo "$(YELLOW)Releasing project$(CLEAR)"
 	release
 
 clean:
 	@echo "$(YELLOW)Cleaning generated files$(CLEAR)"
 	rm -rf $(BUILD_DIR)
-
-help:
-	@echo "$(YELLOW)Print help$(CLEAR)"
-	@echo "$(CYAN)test$(CLEAR)    Run unit tests"
-	@echo "$(CYAN)build$(CLEAR)   Build executable"
-	@echo "$(CYAN)archive$(CLEAR) Build binary archive"
-	@echo "$(CYAN)release$(CLEAR) Make a release"
-	@echo "$(CYAN)clean$(CLEAR)   Clean generated files"
-	@echo "$(CYAN)help$(CLEAR)    Print this help screen"
