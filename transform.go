@@ -467,63 +467,41 @@ pre code, pre tt {
   border: none;
 }`
 
- MD_TEMPLATE = `
-# Change Log
+ MD_TEMPLATE = `# Change Log
 
-{{ range $release := .Changelog }}
-## Release {{ .Version }} ({{ .Date }})
+{{ range $release := .Changelog }}## Release {{ .Version }} ({{ .Date }})
 
 {{ .Summary }}
 
-{{ if .Added }}
-### Added
+{{ if .Added }}### Added
 
-{{ range $entry := .Added }}
-- {{ . }}
-{{ end }}
-{{ end }}
+{{ range $entry := .Added }}- {{ . }}
+{{ end }}{{ end }}
 
-{{ if .Changed }}
-### Changed
+{{ if .Changed }}### Changed
 
-{{ range $entry := .Changed }}
-- {{ . }}
-{{ end }}
-{{ end }}
+{{ range $entry := .Changed }}- {{ . }}
+{{ end }}{{ end }}
 
-{{ if .Deprecated }}
-### Deprecated
+{{ if .Deprecated }}### Deprecated
 
-{{ range $entry := .Deprecated }}
-- {{ . }}
-{{ end }}
-{{ end }}
+{{ range $entry := .Deprecated }}- {{ . }}
+{{ end }}{{ end }}
 
-{{ if .Removed }}
-### Removed
+{{ if .Removed }}### Removed
 
-{{ range $entry := .Removed }}
-- {{ . }}
-{{ end }}
-{{ end }}
+{{ range $entry := .Removed }}- {{ . }}
+{{ end }}{{ end }}
 
-{{ if .Fixed }}
-### Fixed
+{{ if .Fixed }}### Fixed
 
-{{ range $entry := .Fixed }}
-- {{ . }}
-{{ end }}
-{{ end }}
+{{ range $entry := .Fixed }}- {{ . }}
+{{ end }}{{ end }}
 
-{{ if .Security }}
-### Security
+{{ if .Security }}### Security
 
-{{ range $entry := .Security }}
-- {{ . }}
-{{ end }}
-{{ end }}
-
-{{ end }}
+{{ range $entry := .Security }}- {{ . }}
+{{ end }}{{ end }}{{ end }}
 `
 )
 
