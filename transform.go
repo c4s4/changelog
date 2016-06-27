@@ -466,6 +466,65 @@ pre code, pre tt {
   background-color: transparent;
   border: none;
 }`
+
+ MD_TEMPLATE = `
+# Change Log
+
+{{ range $release := .Changelog }}
+## Release {{ .Version }} ({{ .Date }})
+
+{{ .Summary }}
+
+{{ if .Added }}
+### Added
+
+{{ range $entry := .Added }}
+- {{ . }}
+{{ end }}
+{{ end }}
+
+{{ if .Changed }}
+### Changed
+
+{{ range $entry := .Changed }}
+- {{ . }}
+{{ end }}
+{{ end }}
+
+{{ if .Deprecated }}
+### Deprecated
+
+{{ range $entry := .Deprecated }}
+- {{ . }}
+{{ end }}
+{{ end }}
+
+{{ if .Removed }}
+### Removed
+
+{{ range $entry := .Removed }}
+- {{ . }}
+{{ end }}
+{{ end }}
+
+{{ if .Fixed }}
+### Fixed
+
+{{ range $entry := .Fixed }}
+- {{ . }}
+{{ end }}
+{{ end }}
+
+{{ if .Security }}
+### Security
+
+{{ range $entry := .Security }}
+- {{ . }}
+{{ end }}
+{{ end }}
+
+{{ end }}
+`
 )
 
 type HtmlTemplateData struct {
