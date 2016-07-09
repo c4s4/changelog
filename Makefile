@@ -19,7 +19,7 @@ help:
 
 deps:
 	@echo "$(YELLOW)Installing GO dependencies$(CLEAR)"
-	go get gopkg.in/yaml.v1
+	go get gopkg.in/yaml.v2
 	go get github.com/mitchellh/gox
 
 test:
