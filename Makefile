@@ -34,10 +34,12 @@ build: clean test
 archive: build
 	@echo "$(YELLOW)Building distribution archive$(CLEAR)"
 	mkdir -p $(BUILD_DIR)/$(NAME)-$(VERSION)/bin/
+	mkdir -p $(BUILD_DIR)/$(NAME)-$(VERSION)/sh/
 	gox -output=$(BUILD_DIR)/$(NAME)-$(VERSION)/bin/{{.Dir}}_{{.OS}}_{{.Arch}}
 	cp LICENSE.txt $(BUILD_DIR)/$(NAME)-$(VERSION)/
 	cp README.md $(BUILD_DIR)/ && cd $(BUILD_DIR) && md2pdf README.md && cp README.pdf $(NAME)-$(VERSION)/
 	cp CHANGELOG.yml $(BUILD_DIR)/ && cd $(BUILD_DIR) && changelog to html style > $(NAME)-$(VERSION)/CHANGELOG.html
+	cp release $(BUILD_DIR)/$(NAME)-$(VERSION)/sh/
 	cd $(BUILD_DIR) && tar cvzf $(NAME)-bin-$(VERSION).tar.gz $(NAME)-$(VERSION)
 
 release: archive

@@ -128,4 +128,9 @@ You can transform the YAML changelog into HTML.
 - `changelog to html` transforms changelog to HTML and prints it on the console. No stylesheet is applied.
 - `changelog to html stylesheet` transforms the changelog to HTML and applies the stylesheet which path is *stylesheet*. The special value *style* for stylesheet applies a default stylesheet.
 
+Usage
+-----
+
+You will find an example script that calls *changelog* to perform a release in *sh* directory of the archive.
+
 *Enjoy!*
