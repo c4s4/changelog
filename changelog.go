@@ -69,8 +69,8 @@ func Errorf(code int, message string, args ...interface{}) {
 }
 
 func readChangelog() []byte {
-	stat, _ := os.Stdin.Stat()
-	if (stat.Mode() & os.ModeCharDevice) == 0 {
+	stat, err := os.Stdin.Stat()
+	if err == nil && (stat.Mode()&os.ModeCharDevice) == 0 {
 		// data is being piped to stdin
 		source, err := ioutil.ReadAll(os.Stdin)
 		if err != nil {

@@ -1,3 +1,9 @@
+- version: 1.1.1
+  date:    2016-12-08
+  summary: Fixed bug on Windows
+  fixed:
+  - "Fixed a bug on Windows reading standard input."
+
 - version: 1.1.0
   date:    2016-06-27
   summary: Markdown output
