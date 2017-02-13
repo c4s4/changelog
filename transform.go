@@ -467,7 +467,7 @@ pre code, pre tt {
   border: none;
 }`
 
- MD_TEMPLATE = `# Change Log
+	MD_TEMPLATE = `# Change Log
 
 {{ range $release := .Changelog }}## Release {{ .Version }} ({{ .Date }})
 
@@ -476,19 +476,24 @@ pre code, pre tt {
 {{ if .Added }}### Added
 
 {{ range $entry := .Added }}- {{ . }}
-{{ end }}{{ end }}{{ if .Changed }}### Changed
+{{ end }}{{ end }}{{ if .Changed }}
+### Changed
 
 {{ range $entry := .Changed }}- {{ . }}
-{{ end }}{{ end }}{{ if .Deprecated }}### Deprecated
+{{ end }}{{ end }}{{ if .Deprecated }}
+### Deprecated
 
 {{ range $entry := .Deprecated }}- {{ . }}
-{{ end }}{{ end }}{{ if .Removed }}### Removed
+{{ end }}{{ end }}{{ if .Removed }}
+### Removed
 
 {{ range $entry := .Removed }}- {{ . }}
-{{ end }}{{ end }}{{ if .Fixed }}### Fixed
+{{ end }}{{ end }}{{ if .Fixed }}
+### Fixed
 
 {{ range $entry := .Fixed }}- {{ . }}
-{{ end }}{{ end }}{{ if .Security }}### Security
+{{ end }}{{ end }}{{ if .Security }}
+### Security
 
 {{ range $entry := .Security }}- {{ . }}
 {{ end }}{{ end }}
@@ -545,10 +550,10 @@ func transform(changelog *Changelog, args []string) {
 	}
 	format := args[0]
 	if format == "html" {
-     toHtml(changelog, args[1:])
+		toHtml(changelog, args[1:])
 	} else if format == "markdown" {
-     toMarkdown(changelog)
-  } else {
-      Errorf(ERROR_TRANSFORM, "Unknown format %s", args[0])
-   }
+		toMarkdown(changelog)
+	} else {
+		Errorf(ERROR_TRANSFORM, "Unknown format %s", args[0])
+	}
 }
