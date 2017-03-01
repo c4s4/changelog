@@ -1,3 +1,9 @@
+- version: 1.2.0
+  date:    2017-03-01
+  summary: Added sections
+  added:
+  - "Added Rejected and Notes sections."
+
 - version: 1.1.2
   date:    2017-02-13
   summary: Fixed bug

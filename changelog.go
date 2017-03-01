@@ -26,6 +26,8 @@ type Release struct {
 	Removed    []string
 	Fixed      []string
 	Security   []string
+	Rejected   []string
+	Notes      []string
 }
 
 type Changelog []Release
