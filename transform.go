@@ -71,6 +71,22 @@ const (
 {{ end }}
 </ul>
 {{ end }}
+{{ if .Rejected }}
+<h3>Rejected</h3>
+<ul>
+{{ range $entry := .Rejected }}
+<li>{{ . }}</li>
+{{ end }}
+</ul>
+{{ end }}
+{{ if .Notes }}
+<h3>Notes</h3>
+<ul>
+{{ range $entry := .Notes }}
+<li>{{ . }}</li>
+{{ end }}
+</ul>
+{{ end }}
 {{ end }}
 </body>
 </html>`
@@ -496,6 +512,14 @@ pre code, pre tt {
 ### Security
 
 {{ range $entry := .Security }}- {{ . }}
+{{ end }}{{ end }}{{ if .Rejected }}
+### Rejected
+
+{{ range $entry := .Rejected }}- {{ . }}
+{{ end }}{{ end }}{{ if .Notes }}
+### Notes
+
+{{ range $entry := .Notes }}- {{ . }}
 {{ end }}{{ end }}
 {{ end }}`
 )
