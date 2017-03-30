@@ -1,37 +1,15 @@
 name:    changelog
 doc:     Build changelog project
 default: test
+extends: :go:simple-command.yml
 
 properties:
   NAME:      "changelog"
-  VERSION:   '#{run("changelog", "release", "version")}'
-  BUILD_DIR: "build"
-  ARC_DIR:   "#{BUILD_DIR}/#{NAME}-#{VERSION}"
   DEPENDENCIES:
   - "gopkg.in/yaml.v2"
   - "github.com/mitchellh/gox"
 
 targets:
-
-  deps:
-    doc: Install Go dependencies
-    steps:
-    - for: dependency
-      in:  DEPENDENCIES
-      do:
-      - print: "Getting dependency #{dependency}..."
-      - 'go get "#{dependency}"'
-
-  test:
-    doc: Run Go tests
-    steps:
-    - 'go test'
-
-  build:
-    doc: Build Go application
-    steps:
-    - mkdir: "#{BUILD_DIR}"
-    - 'go build -o #{BUILD_DIR}/#{NAME}'
 
   archive:
     doc: Build distribution archive
@@ -50,15 +28,3 @@ targets:
       dir: "#{ARC_DIR}"
       prefix: "#{NAME}-#{VERSION}"
       to: "#{BUILD_DIR}/#{NAME}-#{VERSION}.tar.gz"
-
-  release:
-    doc: Make a release
-    depends: [clean, test, archive]
-    steps:
-    - 'release'
-
-  clean:
-    doc: Clean generated files
-    steps:
-    - delete: "#{BUILD_DIR}"
-

@@ -25,32 +25,32 @@ func checkRelease(release Release) {
 	}
 }
 
-func checkChangelog(changelog *Changelog) {
-	if len(*changelog) == 0 {
+func checkChangelog(changelog Changelog) {
+	if len(changelog) == 0 {
 		Error(ERROR_RELEASE, "Release is empy")
 	}
-	for _, release := range *changelog {
+	for _, release := range changelog {
 		checkRelease(release)
 	}
 }
 
-func release(changelog *Changelog, args []string) {
+func release(changelog Changelog, args []string) {
 	checkChangelog(changelog)
 	if len(args) > 0 {
 		if args[0] == "summary" {
-			fmt.Println((*changelog)[0].Summary)
+			fmt.Println((changelog)[0].Summary)
 		} else if args[0] == "date" {
 			if len(args) > 1 {
 				date := time.Now().Local().Format("2006-01-02")
-				if date != (*changelog)[0].Date {
+				if date != (changelog)[0].Date {
 					Errorf(ERROR_RELEASE, "Release date %s is wrong (should be %s)",
-						(*changelog)[0].Date, date)
+						(changelog)[0].Date, date)
 				}
 			} else {
-				fmt.Println((*changelog)[0].Date)
+				fmt.Println((changelog)[0].Date)
 			}
 		} else if args[0] == "version" {
-			fmt.Println((*changelog)[0].Version)
+			fmt.Println((changelog)[0].Version)
 		} else {
 			Errorf(ERROR_RELEASE, "Unknown release argument %s", args[0])
 		}

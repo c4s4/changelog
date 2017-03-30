@@ -6,9 +6,11 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
+	"strconv"
+	"strings"
 )
 
-type Command func(*Changelog, []string)
+type Command func(Changelog, []string)
 
 var COMMAND_MAPPING = map[string]Command{
 	"help":    help,
@@ -50,8 +52,11 @@ const (
                                  ('style' uses a default stylesheet)
   changelog to markdown          Transform changelog to markdown
 
-The changelog file is searched in current directory. To use a
-different changelog, use < character with its path:
+You can add 'previous' after changelog command to consider next to last release
+instead of the last, or '-N' go go back in past Nth release.
+
+The changelog file is searched in current directory. To use a different
+changelog, use < character with its path:
 
   changelog release < path/to/changelog.yml
 
@@ -99,22 +104,22 @@ func readChangelog() []byte {
 	}
 }
 
-func parseChangelog(source []byte) *Changelog {
+func parseChangelog(source []byte) Changelog {
 	var changelog Changelog
 	err := yaml.Unmarshal(source, &changelog)
 	if err != nil {
 		Errorf(ERROR_PARSING, "Error parsing changelog: %s\n", err.Error())
 	}
-	return &changelog
+	return changelog
 }
 
-func help(changelog *Changelog, args []string) {
+func help(changelog Changelog, args []string) {
 	fmt.Println(HELP)
 	os.Exit(0)
 }
 
 func main() {
-	var changelog *Changelog
+	var changelog Changelog
 	var command string
 	var args []string
 	if len(os.Args) < 2 {
@@ -122,7 +127,21 @@ func main() {
 	} else {
 		changelog = parseChangelog(readChangelog())
 		command = os.Args[1]
-		args = os.Args[2:]
+		if command == "previous" || strings.HasPrefix(command, "-") {
+			if command == "previous" {
+				command = "-1"
+			}
+			delta, err := strconv.Atoi(command[1:])
+			if err != nil || delta >= len(changelog) {
+				fmt.Printf("Bad shift '%s'\n", command)
+				os.Exit(1)
+			}
+			changelog = changelog[delta:]
+			command = os.Args[2]
+			args = os.Args[3:]
+		} else {
+			args = os.Args[2:]
+		}
 	}
 	function := COMMAND_MAPPING[command]
 	if function != nil {
