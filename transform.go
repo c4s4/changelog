@@ -525,11 +525,11 @@ pre code, pre tt {
 )
 
 type TemplateData struct {
-	Changelog   *Changelog
+	Changelog   Changelog
 	Stylesheets []string
 }
 
-func toHtml(changelog *Changelog, args []string) {
+func toHtml(changelog Changelog, args []string) {
 	stylesheets := make([]string, 0)
 	for _, file := range args {
 		var stylesheet []byte
@@ -555,7 +555,7 @@ func toHtml(changelog *Changelog, args []string) {
 	}
 }
 
-func toMarkdown(changelog *Changelog) {
+func toMarkdown(changelog Changelog) {
 	data := TemplateData{
 		Stylesheets: nil,
 		Changelog:   changelog,
@@ -567,7 +567,7 @@ func toMarkdown(changelog *Changelog) {
 	}
 }
 
-func transform(changelog *Changelog, args []string) {
+func transform(changelog Changelog, args []string) {
 	checkChangelog(changelog)
 	if len(args) < 1 {
 		Error(ERROR_TRANSFORM, "You must pass format to transform to")
