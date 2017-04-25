@@ -52,7 +52,7 @@ const (
                                  ('style' uses a default stylesheet)
   changelog to markdown          Transform changelog to markdown
 
-You can add 'previous' after changelog command to consider next to last release
+You can add 'next' after changelog command to consider next to last release
 instead of the last, or '-N' go go back in past Nth release.
 
 The changelog file is searched in current directory. To use a different
@@ -127,10 +127,10 @@ func main() {
 	} else {
 		changelog = parseChangelog(readChangelog())
 		command = os.Args[1]
-		if command == "previous" || strings.HasPrefix(command, "-") {
-			if command == "previous" {
-				command = "-1"
-			}
+		if command == "next" {
+			command = "-1"
+		}
+		if strings.HasPrefix(command, "-") {
 			delta, err := strconv.Atoi(command[1:])
 			if err != nil || delta >= len(changelog) {
 				fmt.Printf("Bad shift '%s'\n", command)
@@ -147,7 +147,7 @@ func main() {
 	if function != nil {
 		function(changelog, args)
 	} else {
-		fmt.Printf("Command %s unknown\n", command)
+		fmt.Printf("Command '%s' unknown\n", command)
 		os.Exit(ERROR_READING)
 	}
 }

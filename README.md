@@ -112,7 +112,7 @@ Release features
 These features are useful while releasing software: you can extract all release information (such as version, date and summary) from the changelog. You don't have to duplicate release version in changelog and in makefile for instance. You can also check that release version and date formats are correct. Finally you can ensure that release date in changelog is today, thus avoiding a wrong release date in a changelog.
 
 - `changelog release` checks the release entry, which means that changelog must have at least one release block with:
-    - A *version* entry is set with *x.y.z* format, where *y* and *z* are optional.
+    - A *version* entry is set with *x.y.z* format, where *y* and *z* are optional. A *-SNAPSHOT* is also possible at the end of the version number.
     - A *date* entry is set with ISO format, that is *yyyy-mm-dd*.
     - A *summary* entry is not mandatory.
 - `changelog release date` extracts, checks and prints the date of the release.
