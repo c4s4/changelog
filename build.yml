@@ -8,8 +8,8 @@ properties:
   BUILD_DIR: 'build'
   ARC_DIR:   '#{BUILD_DIR}/#{NAME}-#{VERSION}'
   DEPENDENCIES:
-  - "github.com/mitchellh/gox"
-  - "gopkg.in/yaml.v2"
+  - 'github.com/mitchellh/gox'
+  - 'gopkg.in/yaml.v2'
 
 targets:
 
@@ -36,20 +36,17 @@ targets:
   archive:
     doc: Build distribution archive
     steps:
-    - mkdir: "#{BUILD_DIR}/#{NAME}-#{VERSION}/bin/"
-    - mkdir: "#{BUILD_DIR}/#{NAME}-#{VERSION}/sh/" 
+    - mkdir: '#{BUILD_DIR}/#{NAME}-#{VERSION}/bin/'
     - 'gox -output=#{ARC_DIR}/bin/{{.Dir}}_{{.OS}}_{{.Arch}}'
     - copy:
-      - "LICENSE.txt"
-      - "CHANGELOG.yml"
-      todir: "#{ARC_DIR}"
-    - 'md2pdf -o #{ARC_DIR}/README.pdf README.md'
-    - copy:  "release"
-      todir: "#{ARC_DIR}/sh/"
-    - tar: "**/*"
-      dir: "#{ARC_DIR}"
-      prefix: "#{NAME}-#{VERSION}"
-      to: "#{BUILD_DIR}/#{NAME}-#{VERSION}.tar.gz"
+      - 'README.md'
+      - 'CHANGELOG.yml'
+      - 'LICENSE.txt'
+      todir: '#{ARC_DIR}'
+    - tar: '**/*'
+      dir: '#{ARC_DIR}'
+      prefix: '#{NAME}-#{VERSION}'
+      to: '#{BUILD_DIR}/#{NAME}-#{VERSION}.tar.gz'
 
   release:
     doc: Make a release
