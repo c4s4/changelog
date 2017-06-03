@@ -43,10 +43,10 @@ targets:
       - 'CHANGELOG.yml'
       - 'LICENSE.txt'
       todir: '#{ARC_DIR}'
-    - tar: '**/*'
-      dir: '#{ARC_DIR}'
+    - tar:    '**/*'
+      dir:    '#{ARC_DIR}'
       prefix: '#{NAME}-#{VERSION}'
-      to: '#{BUILD_DIR}/#{NAME}-#{VERSION}.tar.gz'
+      tofile: '#{BUILD_DIR}/#{NAME}-#{VERSION}.tar.gz'
 
   release:
     doc: Make a release
