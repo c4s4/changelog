@@ -3,6 +3,6 @@
 extends: c4s4/build/go-tool.yml
 
 properties:
-  DEPENDENCIES:
+  LIBRARIES:
   - 'github.com/mitchellh/gox'
   - 'gopkg.in/yaml.v2'
