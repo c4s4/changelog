@@ -47,6 +47,7 @@ const (
   changelog release date check   Check that release date wright
   changelog release version      Print release version
   changelog release summary      Print release summary
+  changelog release to markdown  Print release changelog in markdown
   changelog to html              Transform changelog to html
   changelog to html stylesheet   Transform to html with a stylesheet
                                  ('style' uses a default stylesheet)
