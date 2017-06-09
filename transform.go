@@ -523,39 +523,37 @@ pre code, pre tt {
 {{ end }}{{ end }}
 {{ end }}`
 
-	MD_TEMPLATE_RELEASE = `# Release {{ .Version }} ({{ .Date }})
+	MD_TEMPLATE_RELEASE = `{{ if .Summary }}{{ .Summary }}{{ end }}
 
-{{ if .Summary }}{{ .Summary }}{{ end }}
-
-{{ if .Added }}## Added
+{{ if .Added }}# Added
 
 {{ range $entry := .Added }}- {{ . }}
 {{ end }}{{ end }}{{ if .Changed }}
-## Changed
+# Changed
 
 {{ range $entry := .Changed }}- {{ . }}
 {{ end }}{{ end }}{{ if .Deprecated }}
-## Deprecated
+# Deprecated
 
 {{ range $entry := .Deprecated }}- {{ . }}
 {{ end }}{{ end }}{{ if .Removed }}
-## Removed
+# Removed
 
 {{ range $entry := .Removed }}- {{ . }}
 {{ end }}{{ end }}{{ if .Fixed }}
-## Fixed
+# Fixed
 
 {{ range $entry := .Fixed }}- {{ . }}
 {{ end }}{{ end }}{{ if .Security }}
-## Security
+# Security
 
 {{ range $entry := .Security }}- {{ . }}
 {{ end }}{{ end }}{{ if .Rejected }}
-## Rejected
+# Rejected
 
 {{ range $entry := .Rejected }}- {{ . }}
 {{ end }}{{ end }}{{ if .Notes }}
-## Notes
+# Notes
 
 {{ range $entry := .Notes }}- {{ . }}
 {{ end }}{{ end }}`
