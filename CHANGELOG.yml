@@ -1,5 +1,11 @@
 # Semantic Changelog (http://github.com/c4s4/changelog)
 
+- version: 1.4.0
+  date:    2017-06-09
+  summary: Added release to markdown
+  added:
+  - "Added 'release to markdown command'."
+
 - version: 1.3.1
   date:    2017-04-25
   summary: Added SNAPSHOT support
