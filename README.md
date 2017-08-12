@@ -1,7 +1,7 @@
 Changelog
 =========
 
-[![Build Status](https://travis-ci.org/c4s4/changelog.svg?branch=develop)](https://travis-ci.org/c4s4/changelog)
+[![Build Status](https://travis-ci.org/c4s4/changelog.svg?branch=master)](https://travis-ci.org/c4s4/master)
 
 - Project : <https://github.com/c4s4/changelog>.
 - Downloads : <https://github.com/c4s4/changelog/releases>.
