@@ -10,7 +10,7 @@ const (
 	HTML_TEMPLATE = `<!DOCTYPE html>
 <html>
 <head>
-<title>Change Log</title>
+<title>Changelog</title>
 <meta charset="utf-8">
 {{ range $stylesheet := .Stylesheets }}
 <style type="text/css">
@@ -19,7 +19,7 @@ const (
 {{ end }}
 </head>
 <body>
-<h1>Change Log</h1>
+<h1>Changelog</h1>
 {{ range $release := .Changelog }}
 <h2>Release {{ .Version }} ({{ .Date }})</h2>
 <p>{{ .Summary }}</p>
@@ -483,7 +483,7 @@ pre code, pre tt {
   border: none;
 }`
 
-	MD_TEMPLATE = `# Change Log
+	MD_TEMPLATE = `# Changelog
 
 {{ range $release := .Changelog }}## Release {{ .Version }} ({{ .Date }})
 
@@ -522,9 +522,44 @@ pre code, pre tt {
 {{ range $entry := .Notes }}- {{ . }}
 {{ end }}{{ end }}
 {{ end }}`
+
+	MD_TEMPLATE_RELEASE = `{{ if .Summary }}{{ .Summary }}{{ end }}
+
+{{ if .Added }}# Added
+
+{{ range $entry := .Added }}- {{ . }}
+{{ end }}{{ end }}{{ if .Changed }}
+# Changed
+
+{{ range $entry := .Changed }}- {{ . }}
+{{ end }}{{ end }}{{ if .Deprecated }}
+# Deprecated
+
+{{ range $entry := .Deprecated }}- {{ . }}
+{{ end }}{{ end }}{{ if .Removed }}
+# Removed
+
+{{ range $entry := .Removed }}- {{ . }}
+{{ end }}{{ end }}{{ if .Fixed }}
+# Fixed
+
+{{ range $entry := .Fixed }}- {{ . }}
+{{ end }}{{ end }}{{ if .Security }}
+# Security
+
+{{ range $entry := .Security }}- {{ . }}
+{{ end }}{{ end }}{{ if .Rejected }}
+# Rejected
+
+{{ range $entry := .Rejected }}- {{ . }}
+{{ end }}{{ end }}{{ if .Notes }}
+# Notes
+
+{{ range $entry := .Notes }}- {{ . }}
+{{ end }}{{ end }}`
 )
 
-type TemplateData struct {
+type TemplateDataChangelog struct {
 	Changelog   Changelog
 	Stylesheets []string
 }
@@ -544,7 +579,7 @@ func toHtml(changelog Changelog, args []string) {
 		}
 		stylesheets = append(stylesheets, string(stylesheet))
 	}
-	data := TemplateData{
+	data := TemplateDataChangelog{
 		Stylesheets: stylesheets,
 		Changelog:   changelog,
 	}
@@ -556,12 +591,20 @@ func toHtml(changelog Changelog, args []string) {
 }
 
 func toMarkdown(changelog Changelog) {
-	data := TemplateData{
+	data := TemplateDataChangelog{
 		Stylesheets: nil,
 		Changelog:   changelog,
 	}
 	t := template.Must(template.New("changelog").Parse(MD_TEMPLATE))
 	err := t.Execute(os.Stdout, data)
+	if err != nil {
+		Errorf(ERROR_TRANSFORM, "Error processing template: %s", err)
+	}
+}
+
+func releaseToMarkdown(release Release) {
+	t := template.Must(template.New("release").Parse(MD_TEMPLATE_RELEASE))
+	err := t.Execute(os.Stdout, release)
 	if err != nil {
 		Errorf(ERROR_TRANSFORM, "Error processing template: %s", err)
 	}
