@@ -1,7 +1,9 @@
 Changelog
 =========
 
-[![Build Status](https://travis-ci.org/c4s4/changelog.svg?branch=master)](https://travis-ci.org/c4s4/master)
+[![Build Status](https://travis-ci.org/c4s4/changelog.svg?branch=master)](https://travis-ci.org/c4s4/changelog)
+[![Code Quality](https://goreportcard.com/badge/github.com/c4s4/changelog)](https://goreportcard.com/report/github.com/c4s4/changelog)
+[![Coverage Report](https://coveralls.io/repos/github/c4s4/changelog/badge.svg?branch=master)](https://coveralls.io/github/c4s4/changelog?branch=master)
 
 - Project : <https://github.com/c4s4/changelog>.
 - Downloads : <https://github.com/c4s4/changelog/releases>.
