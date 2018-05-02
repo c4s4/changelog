@@ -10,14 +10,17 @@ import (
 	"strings"
 )
 
+// Command is a changelog command implemented with a function
 type Command func(Changelog, []string)
 
-var COMMAND_MAPPING = map[string]Command{
-	"help":    help,
+// CommandMapping maps command names with command functions
+var CommandMapping = map[string]Command{
+	"Help":    Help,
 	"release": release,
 	"to":      transform,
 }
 
+// Release contains information about a release
 type Release struct {
 	Version    string
 	Date       string
@@ -32,16 +35,22 @@ type Release struct {
 	Notes      []string
 }
 
+// Changelog is a list of releases
 type Changelog []Release
 
 const (
-	ERROR_READING   = 1
-	ERROR_PARSING   = 2
-	ERROR_RELEASE   = 3
-	ERROR_TRANSFORM = 4
-	HELP            = `Manage semantic changelog
+	// ErrorReading denotes an error reading changelog file
+	ErrorReading   = 1
+	// ErrorParsing denotes an error parsing changelog file
+	ErrorParsing   = 2
+	// ErrorRelease denotes an error in a release
+	ErrorRelease   = 3
+	// ErrorTransform denotes an error transforming changelog
+	ErrorTransform = 4
+	// HelpMessage is the help text
+	HelpMessage    = `Manage semantic changelog
 
-  changelog                      Print this help screen
+  changelog                      Print this Help screen
   changelog release              Check for release
   changelog release date         Print release date
   changelog release date check   Check that release date wright
@@ -62,16 +71,20 @@ changelog, use < character with its path:
   changelog release < path/to/changelog.yml
 
 will check for release a changelog in 'path/to' directory.`
-	HELP_COMMAND = "help"
+	// HelpCommand is the command for help
+	HelpCommand = "Help"
 )
 
-var REGEXP_FILENAME = regexp.MustCompile(`^(?i)change(-|_)?log(.yml|.yaml)?$`)
+// RegexpFilename is the regular expression for changelog filename
+var RegexpFilename = regexp.MustCompile(`^(?i)change(-|_)?log(.yml|.yaml)?$`)
 
+// Error print an error message and exit with an error code
 func Error(code int, message string) {
 	fmt.Fprintln(os.Stderr, message)
 	os.Exit(code)
 }
 
+// Errorf print an error message with arguments and exit with an error code
 func Errorf(code int, message string, args ...interface{}) {
 	Error(code, fmt.Sprintf(message, args...))
 }
@@ -82,25 +95,25 @@ func readChangelog() []byte {
 		// data is being piped to stdin
 		source, err := ioutil.ReadAll(os.Stdin)
 		if err != nil {
-			Error(ERROR_READING, "Error reading changelog from stdin")
+			Error(ErrorReading, "Error reading changelog from stdin")
 		}
 		return source
 	} else {
 		// look for changelog in current directory
 		files, err := ioutil.ReadDir(".")
 		if err != nil {
-			Error(ERROR_READING, "Could not list current directory")
+			Error(ErrorReading, "Could not list current directory")
 		}
 		for _, file := range files {
-			if !file.IsDir() && REGEXP_FILENAME.MatchString(file.Name()) {
+			if !file.IsDir() && RegexpFilename.MatchString(file.Name()) {
 				source, err := ioutil.ReadFile(file.Name())
 				if err != nil {
-					Errorf(ERROR_READING, "Error reading changelog file '%s'\n", file.Name())
+					Errorf(ErrorReading, "Error reading changelog file '%s'\n", file.Name())
 				}
 				return source
 			}
 		}
-		Error(ERROR_READING, "No changelog file found")
+		Error(ErrorReading, "No changelog file found")
 		return []byte{}
 	}
 }
@@ -109,13 +122,14 @@ func parseChangelog(source []byte) Changelog {
 	var changelog Changelog
 	err := yaml.Unmarshal(source, &changelog)
 	if err != nil {
-		Errorf(ERROR_PARSING, "Error parsing changelog: %s\n", err.Error())
+		Errorf(ErrorParsing, "Error parsing changelog: %s\n", err.Error())
 	}
 	return changelog
 }
 
-func help(changelog Changelog, args []string) {
-	fmt.Println(HELP)
+// Help print help and exit
+func Help(changelog Changelog, args []string) {
+	fmt.Println(HelpMessage)
 	os.Exit(0)
 }
 
@@ -124,7 +138,7 @@ func main() {
 	var command string
 	var args []string
 	if len(os.Args) < 2 {
-		command = HELP_COMMAND
+		command = HelpCommand
 	} else {
 		changelog = parseChangelog(readChangelog())
 		command = os.Args[1]
@@ -144,11 +158,11 @@ func main() {
 			args = os.Args[2:]
 		}
 	}
-	function := COMMAND_MAPPING[command]
+	function := CommandMapping[command]
 	if function != nil {
 		function(changelog, args)
 	} else {
 		fmt.Printf("Command '%s' unknown\n", command)
-		os.Exit(ERROR_READING)
+		os.Exit(ErrorReading)
 	}
 }

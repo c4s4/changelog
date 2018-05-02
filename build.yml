@@ -5,7 +5,7 @@ extends:
 - c4s4/build/release.yml
 
 properties:
-  NAME: 'changelog'
+  NAME:    'changelog'
   LIBRARIES:
   - 'github.com/mitchellh/gox'
   - 'gopkg.in/yaml.v2'
