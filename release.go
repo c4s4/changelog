@@ -6,7 +6,10 @@ import (
 	"time"
 )
 
+// RegexpDate is a regexp for date
 var RegexpDate = regexp.MustCompile(`^\d\d\d\d-\d\d-\d\d$`)
+
+// RegexpVersion is a regexp for version
 var RegexpVersion = regexp.MustCompile(`^\d+(\.\d+)*(-SNAPSHOT)?$`)
 
 func checkRelease(release Release) {

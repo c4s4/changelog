@@ -7,7 +7,8 @@ import (
 )
 
 const (
-	HtmlTemplate = `<!DOCTYPE html>
+	// HTMLTemplate is a template for HTML
+	HTMLTemplate = `<!DOCTYPE html>
 <html>
 <head>
 <title>Changelog</title>
@@ -90,6 +91,7 @@ const (
 {{ end }}
 </body>
 </html>`
+	// Stylesheet is a stylesheet
 	Stylesheet = `
 body {
   font-family: Helvetica, arial, sans-serif;
@@ -483,6 +485,7 @@ pre code, pre tt {
   border: none;
 }`
 
+	// MdTemplate is a markdown template
 	MdTemplate = `# Changelog
 
 {{ range $release := .Changelog }}## Release {{ .Version }} ({{ .Date }})
@@ -523,6 +526,7 @@ pre code, pre tt {
 {{ end }}{{ end }}
 {{ end }}`
 
+	// MdTemplateRelease is a markdown template for a release
 	MdTemplateRelease = `{{ if .Summary }}{{ .Summary }}{{ end }}
 
 {{ if .Added }}# Added
@@ -584,7 +588,7 @@ func toHTML(changelog Changelog, args []string) {
 		Stylesheets: Stylesheets,
 		Changelog:   changelog,
 	}
-	t := template.Must(template.New("changelog").Parse(HtmlTemplate))
+	t := template.Must(template.New("changelog").Parse(HTMLTemplate))
 	err := t.Execute(os.Stdout, data)
 	if err != nil {
 		Errorf(ErrorTransform, "Error processing template: %s", err)

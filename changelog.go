@@ -40,15 +40,15 @@ type Changelog []Release
 
 const (
 	// ErrorReading denotes an error reading changelog file
-	ErrorReading   = 1
+	ErrorReading = 1
 	// ErrorParsing denotes an error parsing changelog file
-	ErrorParsing   = 2
+	ErrorParsing = 2
 	// ErrorRelease denotes an error in a release
-	ErrorRelease   = 3
+	ErrorRelease = 3
 	// ErrorTransform denotes an error transforming changelog
 	ErrorTransform = 4
 	// HelpMessage is the help text
-	HelpMessage    = `Manage semantic changelog
+	HelpMessage = `Manage semantic changelog
 
   changelog                      Print this Help screen
   changelog release              Check for release
@@ -98,24 +98,23 @@ func readChangelog() []byte {
 			Error(ErrorReading, "Error reading changelog from stdin")
 		}
 		return source
-	} else {
-		// look for changelog in current directory
-		files, err := ioutil.ReadDir(".")
-		if err != nil {
-			Error(ErrorReading, "Could not list current directory")
-		}
-		for _, file := range files {
-			if !file.IsDir() && RegexpFilename.MatchString(file.Name()) {
-				source, err := ioutil.ReadFile(file.Name())
-				if err != nil {
-					Errorf(ErrorReading, "Error reading changelog file '%s'\n", file.Name())
-				}
-				return source
-			}
-		}
-		Error(ErrorReading, "No changelog file found")
-		return []byte{}
 	}
+	// look for changelog in current directory
+	files, err := ioutil.ReadDir(".")
+	if err != nil {
+		Error(ErrorReading, "Could not list current directory")
+	}
+	for _, file := range files {
+		if !file.IsDir() && RegexpFilename.MatchString(file.Name()) {
+			source, err := ioutil.ReadFile(file.Name())
+			if err != nil {
+				Errorf(ErrorReading, "Error reading changelog file '%s'\n", file.Name())
+			}
+			return source
+		}
+	}
+	Error(ErrorReading, "No changelog file found")
+	return []byte{}
 }
 
 func parseChangelog(source []byte) Changelog {
