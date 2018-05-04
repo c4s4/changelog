@@ -1,5 +1,11 @@
 # Semantic Changelog (http://github.com/c4s4/changelog)
 
+- version: 1.4.1
+  date:    2018-05-04
+  summary: Fixed warnings
+  fixed:
+  - "Fixed all warnings."
+
 - version: 1.4.0
   date:    2017-06-09
   summary: Added release to markdown

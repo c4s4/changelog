@@ -6,28 +6,31 @@ import (
 	"time"
 )
 
-var REGEXP_DATE = regexp.MustCompile(`^\d\d\d\d-\d\d-\d\d$`)
-var REGEXP_VERSION = regexp.MustCompile(`^\d+(\.\d+)*(-SNAPSHOT)?$`)
+// RegexpDate is a regexp for date
+var RegexpDate = regexp.MustCompile(`^\d\d\d\d-\d\d-\d\d$`)
+
+// RegexpVersion is a regexp for version
+var RegexpVersion = regexp.MustCompile(`^\d+(\.\d+)*(-SNAPSHOT)?$`)
 
 func checkRelease(release Release) {
 	if release.Version == "" {
-		Error(ERROR_RELEASE, "Release version is empty")
+		Error(ErrorRelease, "Release version is empty")
 	}
-	if !REGEXP_VERSION.MatchString(release.Version) {
-		Errorf(ERROR_RELEASE, "Release version '%s' is not a valid semantic version number",
+	if !RegexpVersion.MatchString(release.Version) {
+		Errorf(ErrorRelease, "Release version '%s' is not a valid semantic version number",
 			release.Version)
 	}
 	if release.Date == "" {
-		Error(ERROR_RELEASE, "Release date is empty")
+		Error(ErrorRelease, "Release date is empty")
 	}
-	if !REGEXP_DATE.MatchString(release.Date) {
-		Errorf(ERROR_RELEASE, "Release date '%s' is not valid ISO format", release.Date)
+	if !RegexpDate.MatchString(release.Date) {
+		Errorf(ErrorRelease, "Release date '%s' is not valid ISO format", release.Date)
 	}
 }
 
 func checkChangelog(changelog Changelog) {
 	if len(changelog) == 0 {
-		Error(ERROR_RELEASE, "Release is empy")
+		Error(ErrorRelease, "Release is empy")
 	}
 	for _, release := range changelog {
 		checkRelease(release)
@@ -43,7 +46,7 @@ func release(changelog Changelog, args []string) {
 			if len(args) > 1 {
 				date := time.Now().Local().Format("2006-01-02")
 				if date != (changelog)[0].Date {
-					Errorf(ERROR_RELEASE, "Release date %s is wrong (should be %s)",
+					Errorf(ErrorRelease, "Release date %s is wrong (should be %s)",
 						(changelog)[0].Date, date)
 				}
 			} else {
@@ -54,7 +57,7 @@ func release(changelog Changelog, args []string) {
 		} else if args[0] == "to" {
 			releaseToMarkdown((changelog)[0])
 		} else {
-			Errorf(ERROR_RELEASE, "Unknown release argument %s", args[0])
+			Errorf(ErrorRelease, "Unknown release argument %s", args[0])
 		}
 	}
 }

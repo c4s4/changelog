@@ -7,14 +7,15 @@ import (
 )
 
 const (
-	HTML_TEMPLATE = `<!DOCTYPE html>
+	// HTMLTemplate is a template for HTML
+	HTMLTemplate = `<!DOCTYPE html>
 <html>
 <head>
 <title>Changelog</title>
 <meta charset="utf-8">
-{{ range $stylesheet := .Stylesheets }}
+{{ range $Stylesheet := .Stylesheets }}
 <style type="text/css">
-{{ $stylesheet }}
+{{ $Stylesheet }}
 </style>
 {{ end }}
 </head>
@@ -90,7 +91,8 @@ const (
 {{ end }}
 </body>
 </html>`
-	STYLESHEET = `
+	// Stylesheet is a stylesheet
+	Stylesheet = `
 body {
   font-family: Helvetica, arial, sans-serif;
   font-size: 16px;
@@ -483,7 +485,8 @@ pre code, pre tt {
   border: none;
 }`
 
-	MD_TEMPLATE = `# Changelog
+	// MdTemplate is a markdown template
+	MdTemplate = `# Changelog
 
 {{ range $release := .Changelog }}## Release {{ .Version }} ({{ .Date }})
 
@@ -523,7 +526,8 @@ pre code, pre tt {
 {{ end }}{{ end }}
 {{ end }}`
 
-	MD_TEMPLATE_RELEASE = `{{ if .Summary }}{{ .Summary }}{{ end }}
+	// MdTemplateRelease is a markdown template for a release
+	MdTemplateRelease = `{{ if .Summary }}{{ .Summary }}{{ end }}
 
 {{ if .Added }}# Added
 
@@ -559,34 +563,35 @@ pre code, pre tt {
 {{ end }}{{ end }}`
 )
 
+// TemplateDataChangelog contains data for changelog template
 type TemplateDataChangelog struct {
 	Changelog   Changelog
 	Stylesheets []string
 }
 
-func toHtml(changelog Changelog, args []string) {
-	stylesheets := make([]string, 0)
+func toHTML(changelog Changelog, args []string) {
+	Stylesheets := make([]string, 0)
 	for _, file := range args {
-		var stylesheet []byte
+		var Stylesheet []byte
 		var err error
 		if file == "style" {
-			stylesheet = []byte(STYLESHEET)
+			Stylesheet = []byte(Stylesheet)
 		} else {
-			stylesheet, err = ioutil.ReadFile(file)
+			Stylesheet, err = ioutil.ReadFile(file)
 			if err != nil {
-				Errorf(ERROR_TRANSFORM, "Error loading stylesheet %s: %s", file, err.Error())
+				Errorf(ErrorTransform, "Error loading Stylesheet %s: %s", file, err.Error())
 			}
 		}
-		stylesheets = append(stylesheets, string(stylesheet))
+		Stylesheets = append(Stylesheets, string(Stylesheet))
 	}
 	data := TemplateDataChangelog{
-		Stylesheets: stylesheets,
+		Stylesheets: Stylesheets,
 		Changelog:   changelog,
 	}
-	t := template.Must(template.New("changelog").Parse(HTML_TEMPLATE))
+	t := template.Must(template.New("changelog").Parse(HTMLTemplate))
 	err := t.Execute(os.Stdout, data)
 	if err != nil {
-		Errorf(ERROR_TRANSFORM, "Error processing template: %s", err)
+		Errorf(ErrorTransform, "Error processing template: %s", err)
 	}
 }
 
@@ -595,32 +600,32 @@ func toMarkdown(changelog Changelog) {
 		Stylesheets: nil,
 		Changelog:   changelog,
 	}
-	t := template.Must(template.New("changelog").Parse(MD_TEMPLATE))
+	t := template.Must(template.New("changelog").Parse(MdTemplate))
 	err := t.Execute(os.Stdout, data)
 	if err != nil {
-		Errorf(ERROR_TRANSFORM, "Error processing template: %s", err)
+		Errorf(ErrorTransform, "Error processing template: %s", err)
 	}
 }
 
 func releaseToMarkdown(release Release) {
-	t := template.Must(template.New("release").Parse(MD_TEMPLATE_RELEASE))
+	t := template.Must(template.New("release").Parse(MdTemplateRelease))
 	err := t.Execute(os.Stdout, release)
 	if err != nil {
-		Errorf(ERROR_TRANSFORM, "Error processing template: %s", err)
+		Errorf(ErrorTransform, "Error processing template: %s", err)
 	}
 }
 
 func transform(changelog Changelog, args []string) {
 	checkChangelog(changelog)
 	if len(args) < 1 {
-		Error(ERROR_TRANSFORM, "You must pass format to transform to")
+		Error(ErrorTransform, "You must pass format to transform to")
 	}
 	format := args[0]
 	if format == "html" {
-		toHtml(changelog, args[1:])
+		toHTML(changelog, args[1:])
 	} else if format == "markdown" {
 		toMarkdown(changelog)
 	} else {
-		Errorf(ERROR_TRANSFORM, "Unknown format %s", args[0])
+		Errorf(ErrorTransform, "Unknown format %s", args[0])
 	}
 }
