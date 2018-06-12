@@ -9,3 +9,11 @@ properties:
   LIBRARIES:
   - 'github.com/mitchellh/gox'
   - 'gopkg.in/yaml.v2'
+
+targets:
+
+  release:
+    doc: Perform a release
+    depends: [clean, test, archive]
+    steps:
+    - super:
