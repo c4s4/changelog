@@ -36,7 +36,7 @@ func TestDateRegexp(t *testing.T) {
 }
 
 func TestVersionRegexp(t *testing.T) {
-	var passingVersions = []string{"1.2.3", "1", "1.2", "100.200.300"}
+	var passingVersions = []string{"1.2.3", "1", "1.2", "100.200.300", "1.2.3-SNAPSHOT", "1.2.3-ALPHA", "1.2.3-BETA"}
 	for _, version := range passingVersions {
 		if !RegexpVersion.MatchString(version) {
 			t.Errorf("Version %s should be valid", version)
