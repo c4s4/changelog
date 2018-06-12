@@ -1,9 +1,15 @@
 # Semantic Changelog (http://github.com/c4s4/changelog)
 
+- version: 1.5.1
+  date:    2018-06-12
+  summary: Added number after ALPHA and BETA
+  Added:
+  - "You can now add a suffix after '-ALPHA' and '-BETA' such as in 'X.Y.Z-ALPHA-T'."
+
 - version: 1.5.0
   date:    2018-06-12
   summary: Added ALPHA and BETA
-  fixed:
+  Added:
   - "Suffixes '-ALPHA' and '-BETA' are now accepted as semantic version."
 
 - version: 1.4.1
