@@ -1,5 +1,11 @@
 # Semantic Changelog (http://github.com/c4s4/changelog)
 
+- version: 1.5.3
+  date:    2018-06-13
+  summary: Added RC to version suffixes
+  Added:
+  - "So that you can now have '1.2.3-rc-1'."
+
 - version: 1.5.2
   date:    2018-06-12
   summary: Suffixes can be in lowercase and snapshot may have a number
