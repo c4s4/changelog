@@ -2,18 +2,9 @@
 
 extends:
 - c4s4/build/golang.yml
-- c4s4/build/release.yml
 
 properties:
   NAME:    'changelog'
   LIBRARIES:
   - 'github.com/mitchellh/gox'
   - 'gopkg.in/yaml.v2'
-
-targets:
-
-  release:
-    doc: Perform a release
-    depends: [clean, test, archive]
-    steps:
-    - super:
