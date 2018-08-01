@@ -1,5 +1,9 @@
 # Semantic Changelog (http://github.com/c4s4/changelog)
 
+- version: 1.5.5
+  date:    2018-08-01
+  summary: Miscellaneous fixes in README
+
 - version: 1.5.4
   date:    2018-08-01
   summary: Added prerequisites in Build from Sources section of documentation
