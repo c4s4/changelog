@@ -20,7 +20,7 @@ This is a tool to manage semantic changelogs. A semantic change log is a YAML fi
   added:
   - Added element.
   fixed:
- - Fixed element.
+  - Fixed element.
 
 - version: 0.1.0
   date:    2015-03-29
