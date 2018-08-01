@@ -72,11 +72,19 @@ Download latest binary archive at <https://github.com/c4s4/changelog/releases>. 
 
 ### Build from sources
 
+To build *changelog* from source, you will need latest Go version and install [GoYAML](http://gopkg.in/yaml.v2), with following command:
+
+```bash
+$ go get -u gopkg.in/yaml.v2
+```
+
 Get the project master and build the binary :
 
-        git clone git@github.com:c4s4/changelog
-        cd changelog
-        go build
+```bash
+git clone git@github.com:c4s4/changelog
+cd changelog
+go build
+```
 
 This will generate a *changelog* binary for your platform. Put this binary somewhere in your *PATH*.
 
