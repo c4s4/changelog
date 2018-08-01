@@ -1,27 +1,31 @@
 # Semantic Changelog (http://github.com/c4s4/changelog)
 
+- version: 1.5.4
+  date:    2018-08-01
+  summary: Added prerequisites in Build from Sources section of documentation
+
 - version: 1.5.3
   date:    2018-06-13
   summary: Added RC to version suffixes
-  Added:
+  added:
   - "So that you can now have '1.2.3-rc-1'."
 
 - version: 1.5.2
   date:    2018-06-12
   summary: Suffixes can be in lowercase and snapshot may have a number
-  Added:
+  added:
   - "So that you can now have '1.2.3-alpha-1' and '1.2.3-snapshot-12'."
 
 - version: 1.5.1
   date:    2018-06-12
   summary: Added number after ALPHA and BETA
-  Added:
+  added:
   - "You can now add a suffix after '-ALPHA' and '-BETA' such as in 'X.Y.Z-ALPHA-T'."
 
 - version: 1.5.0
   date:    2018-06-12
   summary: Added ALPHA and BETA
-  Added:
+  added:
   - "Suffixes '-ALPHA' and '-BETA' are now accepted as semantic version."
 
 - version: 1.4.1
