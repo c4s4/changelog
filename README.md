@@ -15,16 +15,16 @@ This is a tool to manage semantic changelogs. A semantic change log is a YAML fi
 
 ```yaml
 - version: 1.0.0
-    date:    2015-03-30
-    summary: Second release
-    added:
-    - Added element.
-    fixed:
-    - Fixed element.
+  date:    2015-03-30
+  summary: Second release
+  added:
+  - Added element.
+  fixed:
+ - Fixed element.
 
 - version: 0.1.0
-    date:    2015-03-29
-    summary: First release
+  date:    2015-03-29
+  summary: First release
 ```
 
 To extract release version, date and summary, you would type:
@@ -107,8 +107,8 @@ The changelog file is made of a series of entries, one for each release. Each en
 
 ```yaml
 - version: 1.2.3
-    date:    2015-05-28
-    summary: Debug release
+  date:    2015-05-28
+  summary: Debug release
 ```
 
 After this mandatory header, you may add lists for *added*, *changed*, *deprecated*, *removed*, *fixed* and *security*:
