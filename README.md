@@ -13,53 +13,65 @@ Changelog
 
 This is a tool to manage semantic changelogs. A semantic change log is a YAML file where you can extract information regarding releases, such as version, date or summary. Here is a sample semantic changelog:
 
-    - version: 1.0.0
-      date:    2015-03-30
-      summary: Second release
-      added:
-      - Added element.
-      fixed:
-      - Fixed element.
-    
-    - version: 0.1.0
-      date:    2015-03-29
-      summary: First release
+```yaml
+- version: 1.0.0
+    date:    2015-03-30
+    summary: Second release
+    added:
+    - Added element.
+    fixed:
+    - Fixed element.
+
+- version: 0.1.0
+    date:    2015-03-29
+    summary: First release
+```
 
 To extract release version, date and summary, you would type:
 
-    $ changelog release version
-    1.0.0
-    $ changelog release date
-    2015-03-30
-    $ changelog release summary
-    Second release
+```bash
+$ changelog release version
+1.0.0
+$ changelog release date
+2015-03-30
+$ changelog release summary
+Second release
+```
 
 This tool extracts information from changelog in current directory. You can parse another file using *<* character on command line:
 
-    $ changelog release version < path/to/another/changelog
+```bash
+$ changelog release version < path/to/another/changelog
+```
 
 To get help about this tool, just type:
 
-    $ changelog
-    Manage semantic changelog
-    
-      changelog                      Print this help screen
-      changelog release              Check for release
-      changelog release date         Print release date
-      changelog release date check   Check that release date is correct
-      changelog release version      Print release version
-      changelog release summary      Print release summary
-      changelog to html              Transform changelog to html
-      changelog to html stylesheet   Transform to html with a stylesheet
-                                     ('style' uses a default stylesheet)
-      changelog to markdown          Transform changelog to markdown
-    
-    The changelog file is searched in current directory. To use a
-    different changelog, use < character with its path:
-    
-      changelog release < path/to/changelog.yml
-    
-    will check for release a changelog in 'path/to' directory.
+```bash
+$ changelog
+Manage semantic changelog
+
+  changelog                      Print this Help screen
+  changelog release              Check for release
+  changelog release date         Print release date
+  changelog release date check   Check that release date wright
+  changelog release version      Print release version
+  changelog release summary      Print release summary
+  changelog release to markdown  Print release changelog in markdown
+  changelog to html              Transform changelog to html
+  changelog to html stylesheet   Transform to html with a stylesheet
+                                 ('style' uses a default stylesheet)
+  changelog to markdown          Transform changelog to markdown
+
+You can add 'next' after changelog command to consider next to last release
+instead of the last, or '-N' go go back in past Nth release.
+
+The changelog file is searched in current directory. To use a different
+changelog, use < character with its path:
+
+  changelog release < path/to/changelog.yml
+
+will check for release a changelog in 'path/to' directory.
+```
 
 Installation
 ------------
@@ -93,28 +105,32 @@ Changelog Format
 
 The changelog file is made of a series of entries, one for each release. Each entry must include a release *version* and a release *date*. It may optionally contain a *summary*. For instance:
 
-    - version: 1.2.3
-      date:    2015-05-28
-      summary: Debug release
+```yaml
+- version: 1.2.3
+    date:    2015-05-28
+    summary: Debug release
+```
 
 After this mandatory header, you may add lists for *added*, *changed*, *deprecated*, *removed*, *fixed* and *security*:
 
-    - version: 1.2.3
-      date:    2015-05-28
-      summary: Debug release
-      added:
-      - First added feature.
-      - Second added feature.
-      changed:
-      - Changed behavior.
-      deprecated:
-      - Don't use that anymore.
-      removed:
-      - This is gone.
-      fixed:
-      - That was fixed.
-      security:
-      - This security issue was fixed.
+```yaml
+- version: 1.2.3
+  date:    2015-05-28
+  summary: Debug release
+  added:
+  - First added feature.
+  - Second added feature.
+  changed:
+  - Changed behavior.
+  deprecated:
+  - Don't use that anymore.
+  removed:
+  - This is gone.
+  fixed:
+  - That was fixed.
+  security:
+  - This security issue was fixed.
+```
 
 This changelog uses [YAML file format](http://yaml.org/spec/1.2/spec.html). Most frequent errors are the following:
 
