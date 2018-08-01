@@ -36,7 +36,7 @@ func TestDateRegexp(t *testing.T) {
 }
 
 func TestVersionRegexp(t *testing.T) {
-	var passingVersions = []string {
+	var passingVersions = []string{
 		"1.2.3", "1", "1.2", "100.200.300",
 		"1.2.3-SNAPSHOT", "1.2.3-ALPHA", "1.2.3-BETA", "1.2.3-RC",
 		"1.2.3-SNAPSHOT-1", "1.2.3-ALPHA-1", "1.2.3-BETA-1", "1.2.3-RC-1",
