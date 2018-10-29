@@ -6,3 +6,10 @@ extends:
 properties:
   LIBRARIES:
   - 'gopkg.in/yaml.v2'
+
+targets:
+
+  bin:
+    steps:
+    - mkdir: =BUILD_DIR
+    - $: ['go', 'build', '-o', '={BUILD_DIR}/changelog']
