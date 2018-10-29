@@ -1,4 +1,4 @@
-package changelog
+package lib
 
 import (
 	"testing"
