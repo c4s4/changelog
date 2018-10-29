@@ -11,7 +11,7 @@ import (
 )
 
 // Command is a changelog command implemented with a function
-type Command func(Changelog, []string)
+type Command func(Changelog, []string) error
 
 // CommandMapping maps command names with command functions
 var CommandMapping = map[string]Command{
@@ -78,58 +78,69 @@ will check for release a changelog in 'path/to' directory.`
 // RegexpFilename is the regular expression for changelog filename
 var RegexpFilename = regexp.MustCompile(`^(?i)change(-|_)?log(.yml|.yaml)?$`)
 
-// Error print an error message and exit with an error code
-func Error(code int, message string) {
-	fmt.Fprintln(os.Stderr, message)
-	os.Exit(code)
-}
-
-// Errorf print an error message with arguments and exit with an error code
-func Errorf(code int, message string, args ...interface{}) {
-	Error(code, fmt.Sprintf(message, args...))
-}
-
-func readChangelog() []byte {
+// IsPiped tells if content was piped to this process
+func IsPiped() bool {
 	stat, err := os.Stdin.Stat()
 	if err == nil && (stat.Mode()&os.ModeCharDevice) == 0 {
-		// data is being piped to stdin
-		source, err := ioutil.ReadAll(os.Stdin)
-		if err != nil {
-			Error(ErrorReading, "Error reading changelog from stdin")
-		}
-		return source
+		return true
 	}
-	// look for changelog in current directory
+	return false
+}
+
+// ReadStdin reads standard input and return its content
+func ReadStdin() ([]byte, error) {
+	source, err := ioutil.ReadAll(os.Stdin)
+	if err != nil {
+		return nil, fmt.Errorf("Error reading changelog from stdin")
+	}
+	return source, nil
+}
+
+// FindChangelog finds source file and return its name
+func FindChangelog() (string, error) {
 	files, err := ioutil.ReadDir(".")
 	if err != nil {
-		Error(ErrorReading, "Could not list current directory")
+		return "", fmt.Errorf("Could not list current directory")
 	}
 	for _, file := range files {
 		if !file.IsDir() && RegexpFilename.MatchString(file.Name()) {
-			source, err := ioutil.ReadFile(file.Name())
-			if err != nil {
-				Errorf(ErrorReading, "Error reading changelog file '%s'\n", file.Name())
-			}
-			return source
+			return file.Name(), nil
 		}
 	}
-	Error(ErrorReading, "No changelog file found")
-	return []byte{}
+	return "", fmt.Errorf("Could not find changelog file")
 }
 
-func parseChangelog(source []byte) Changelog {
+// ReadChangelog reads source file and return contents as array of bytes
+func ReadChangelog(file string) ([]byte, error) {
+	source, err := ioutil.ReadFile(file)
+	if err != nil {
+		return nil, fmt.Errorf("Error reading changelog file '%s'", file)
+	}
+	return source, nil
+}
+
+// ParseChangelog parses source file and return Changelog object
+func ParseChangelog(source []byte) (Changelog, error) {
 	var changelog Changelog
 	err := yaml.Unmarshal(source, &changelog)
 	if err != nil {
-		Errorf(ErrorParsing, "Error parsing changelog: %s\n", err.Error())
+		return nil, fmt.Errorf("Error parsing changelog: %s", err.Error())
 	}
-	return changelog
+	return changelog, nil
 }
 
 // Help print help and exit
-func Help(changelog Changelog, args []string) {
+func Help(changelog Changelog, args []string) error {
 	fmt.Println(HelpMessage)
 	os.Exit(0)
+	return nil
+}
+
+func printError(err error) {
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: %s", err.Error())
+		os.Exit(1)
+	}
 }
 
 func main() {
@@ -139,7 +150,19 @@ func main() {
 	if len(os.Args) < 2 {
 		command = HelpCommand
 	} else {
-		changelog = parseChangelog(readChangelog())
+		var source []byte
+		var err error
+		if IsPiped() {
+			source, err = ReadStdin()
+			printError(err)
+		} else {
+			file, err := FindChangelog()
+			printError(err)
+			source, err = ReadChangelog(file)
+			printError(err)
+		}
+		changelog, err = ParseChangelog(source)
+		printError(err)
 		command = os.Args[1]
 		if command == "next" {
 			command = "-1"

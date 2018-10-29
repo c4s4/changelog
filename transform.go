@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"text/template"
@@ -569,7 +570,7 @@ type TemplateDataChangelog struct {
 	Stylesheets []string
 }
 
-func toHTML(changelog Changelog, args []string) {
+func toHTML(changelog Changelog, args []string) error {
 	Stylesheets := make([]string, 0)
 	for _, file := range args {
 		var Stylesheet []byte
@@ -579,7 +580,7 @@ func toHTML(changelog Changelog, args []string) {
 		} else {
 			Stylesheet, err = ioutil.ReadFile(file)
 			if err != nil {
-				Errorf(ErrorTransform, "Error loading Stylesheet %s: %s", file, err.Error())
+				return fmt.Errorf("Error loading Stylesheet %s: %s", file, err.Error())
 			}
 		}
 		Stylesheets = append(Stylesheets, string(Stylesheet))
@@ -591,11 +592,12 @@ func toHTML(changelog Changelog, args []string) {
 	t := template.Must(template.New("changelog").Parse(HTMLTemplate))
 	err := t.Execute(os.Stdout, data)
 	if err != nil {
-		Errorf(ErrorTransform, "Error processing template: %s", err)
+		return fmt.Errorf("Error processing template: %s", err)
 	}
+	return nil
 }
 
-func toMarkdown(changelog Changelog) {
+func toMarkdown(changelog Changelog) error {
 	data := TemplateDataChangelog{
 		Stylesheets: nil,
 		Changelog:   changelog,
@@ -603,22 +605,24 @@ func toMarkdown(changelog Changelog) {
 	t := template.Must(template.New("changelog").Parse(MdTemplate))
 	err := t.Execute(os.Stdout, data)
 	if err != nil {
-		Errorf(ErrorTransform, "Error processing template: %s", err)
+		return fmt.Errorf("Error processing template: %s", err)
 	}
+	return nil
 }
 
-func releaseToMarkdown(release Release) {
+func releaseToMarkdown(release Release) error {
 	t := template.Must(template.New("release").Parse(MdTemplateRelease))
 	err := t.Execute(os.Stdout, release)
 	if err != nil {
-		Errorf(ErrorTransform, "Error processing template: %s", err)
+		return fmt.Errorf("Error processing template: %s", err)
 	}
+	return nil
 }
 
-func transform(changelog Changelog, args []string) {
+func transform(changelog Changelog, args []string) error {
 	checkChangelog(changelog)
 	if len(args) < 1 {
-		Error(ErrorTransform, "You must pass format to transform to")
+		return fmt.Errorf("You must pass format to transform to")
 	}
 	format := args[0]
 	if format == "html" {
@@ -626,6 +630,7 @@ func transform(changelog Changelog, args []string) {
 	} else if format == "markdown" {
 		toMarkdown(changelog)
 	} else {
-		Errorf(ErrorTransform, "Unknown format %s", args[0])
+		return fmt.Errorf("Unknown format %s", args[0])
 	}
+	return nil
 }

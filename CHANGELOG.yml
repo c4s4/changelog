@@ -1,5 +1,9 @@
 # Semantic Changelog (http://github.com/c4s4/changelog)
 
+- version: 1.6.0
+  date:    2018-10-29
+  summary: Refactoring to use changelog as a library
+
 - version: 1.5.5
   date:    2018-08-01
   summary: Miscellaneous fixes in README

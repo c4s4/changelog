@@ -4,7 +4,5 @@ extends:
 - c4s4/build/golang.yml
 
 properties:
-  NAME:    'changelog'
   LIBRARIES:
-  - 'github.com/mitchellh/gox'
   - 'gopkg.in/yaml.v2'
