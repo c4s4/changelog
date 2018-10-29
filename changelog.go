@@ -37,14 +37,6 @@ type Release struct {
 type Changelog []Release
 
 const (
-	// ErrorReading denotes an error reading changelog file
-	ErrorReading = 1
-	// ErrorParsing denotes an error parsing changelog file
-	ErrorParsing = 2
-	// ErrorRelease denotes an error in a release
-	ErrorRelease = 3
-	// ErrorTransform denotes an error transforming changelog
-	ErrorTransform = 4
 	// HelpMessage is the help text
 	HelpMessage = `Manage semantic changelog
 

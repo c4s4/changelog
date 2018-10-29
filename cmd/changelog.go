@@ -2,13 +2,10 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
-	"github.com/c4s4/changelog"
+	c "github.com/c4s4/changelog"
 )
 
 func printError(err error) {
@@ -19,24 +16,24 @@ func printError(err error) {
 }
 
 func main() {
-	var changelog Changelog
+	var changelog c.Changelog
 	var command string
 	var args []string
 	if len(os.Args) < 2 {
-		command = HelpCommand
+		command = c.HelpCommand
 	} else {
 		var source []byte
 		var err error
-		if IsPiped() {
-			source, err = ReadStdin()
+		if c.IsPiped() {
+			source, err = c.ReadStdin()
 			printError(err)
 		} else {
-			file, err := FindChangelog()
+			file, err := c.FindChangelog()
 			printError(err)
-			source, err = ReadChangelog(file)
+			source, err = c.ReadChangelog(file)
 			printError(err)
 		}
-		changelog, err = ParseChangelog(source)
+		changelog, err = c.ParseChangelog(source)
 		printError(err)
 		command = os.Args[1]
 		if command == "next" {
@@ -55,11 +52,11 @@ func main() {
 			args = os.Args[2:]
 		}
 	}
-	function := CommandMapping[command]
+	function := c.CommandMapping[command]
 	if function != nil {
 		function(changelog, args)
 	} else {
 		fmt.Printf("Command '%s' unknown\n", command)
-		os.Exit(ErrorReading)
+		os.Exit(1)
 	}
 }
