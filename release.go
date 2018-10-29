@@ -47,7 +47,7 @@ func checkChangelog(changelog Changelog) error {
 
 func release(changelog Changelog, args []string) error {
 	checkChangelog(changelog)
-	if len(args) > 0 {
+	if len(args) > 0 && len(changelog) > 0 {
 		if args[0] == "summary" {
 			fmt.Println((changelog)[0].Summary)
 		} else if args[0] == "date" {

@@ -78,7 +78,8 @@ will check for release a changelog in 'path/to' directory.`
 // RegexpFilename is the regular expression for changelog filename
 var RegexpFilename = regexp.MustCompile(`^(?i)change(-|_)?log(.yml|.yaml)?$`)
 
-func isPiped() bool {
+// IsPiped tells if content was piped to this process
+func IsPiped() bool {
 	stat, err := os.Stdin.Stat()
 	if err == nil && (stat.Mode()&os.ModeCharDevice) == 0 {
 		return true
@@ -86,7 +87,17 @@ func isPiped() bool {
 	return false
 }
 
-func findChangelog() (string, error) {
+// ReadStdin reads standard input and return its content
+func ReadStdin() ([]byte, error) {
+	source, err := ioutil.ReadAll(os.Stdin)
+	if err != nil {
+		return nil, fmt.Errorf("Error reading changelog from stdin")
+	}
+	return source, nil
+}
+
+// FindChangelog finds source file and return its name
+func FindChangelog() (string, error) {
 	files, err := ioutil.ReadDir(".")
 	if err != nil {
 		return "", fmt.Errorf("Could not list current directory")
@@ -96,42 +107,20 @@ func findChangelog() (string, error) {
 			return file.Name(), nil
 		}
 	}
-	return "", nil
+	return "", fmt.Errorf("Could not find changelog file")
 }
 
-func readChangelog(file string) ([]byte, error) {
-	// file was passed
-	if file != "" {
-		source, err := ioutil.ReadFile(file)
-		if err != nil {
-			return nil, fmt.Errorf("Error reading changelog file '%s'", file)
-		}
-		return source, nil
-	}
-	// look for changelog piped in stdin
-	if isPiped() {
-		source, err := ioutil.ReadAll(os.Stdin)
-		if err != nil {
-			return nil, fmt.Errorf("Error reading changelog from stdin")
-		}
-		return source, nil
-	}
-	// look for changelog in current directory
-	file, err := findChangelog()
+// ReadChangelog reads source file and return contents as array of bytes
+func ReadChangelog(file string) ([]byte, error) {
+	source, err := ioutil.ReadFile(file)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error reading changelog file '%s'", file)
 	}
-	if file != "" {
-		source, err := ioutil.ReadFile(file)
-		if err != nil {
-			return nil, fmt.Errorf("Error reading changelog file '%s'", file)
-		}
-		return source, nil
-	}
-	return nil, fmt.Errorf("No changelog file found")
+	return source, nil
 }
 
-func parseChangelog(source []byte) (Changelog, error) {
+// ParseChangelog parses source file and return Changelog object
+func ParseChangelog(source []byte) (Changelog, error) {
 	var changelog Changelog
 	err := yaml.Unmarshal(source, &changelog)
 	if err != nil {
@@ -147,6 +136,13 @@ func Help(changelog Changelog, args []string) error {
 	return nil
 }
 
+func printError(err error) {
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: %s", err.Error())
+		os.Exit(1)
+	}
+}
+
 func main() {
 	var changelog Changelog
 	var command string
@@ -154,14 +150,19 @@ func main() {
 	if len(os.Args) < 2 {
 		command = HelpCommand
 	} else {
-		source, err := readChangelog("")
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "ERROR: %s", err.Error())
+		var source []byte
+		var err error
+		if IsPiped() {
+			source, err = ReadStdin()
+			printError(err)
+		} else {
+			file, err := FindChangelog()
+			printError(err)
+			source, err = ReadChangelog(file)
+			printError(err)
 		}
-		changelog, err = parseChangelog(source)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "ERROR: %s", err.Error())
-		}
+		changelog, err = ParseChangelog(source)
+		printError(err)
 		command = os.Args[1]
 		if command == "next" {
 			command = "-1"
