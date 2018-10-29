@@ -631,6 +631,6 @@ func transform(changelog Changelog, args []string) error {
 		toMarkdown(changelog)
 	} else {
 		return fmt.Errorf("Unknown format %s", args[0])
-  }
-  return nil
+	}
+	return nil
 }
