@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	lib "github.com/c4s4/changelog/lib"
 	"os"
 	"strconv"
 	"strings"
-	lib "github.com/c4s4/changelog/lib"
 )
 
 func printError(err error) {
