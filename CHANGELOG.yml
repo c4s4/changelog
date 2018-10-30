@@ -1,7 +1,7 @@
 # Semantic Changelog (http://github.com/c4s4/changelog)
 
 - version: 1.6.1
-  date:    2018-10-00
+  date:    2018-10-30
   summary: Improved error messages
 
 - version: 1.6.0
