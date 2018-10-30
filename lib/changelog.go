@@ -81,7 +81,7 @@ func IsPiped() bool {
 func ReadStdin() ([]byte, error) {
 	source, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
-		return nil, fmt.Errorf("Error reading changelog from stdin")
+		return nil, fmt.Errorf("reading changelog from stdin")
 	}
 	return source, nil
 }
@@ -90,21 +90,21 @@ func ReadStdin() ([]byte, error) {
 func FindChangelog() (string, error) {
 	files, err := ioutil.ReadDir(".")
 	if err != nil {
-		return "", fmt.Errorf("Could not list current directory")
+		return "", fmt.Errorf("could not list current directory")
 	}
 	for _, file := range files {
 		if !file.IsDir() && RegexpFilename.MatchString(file.Name()) {
 			return file.Name(), nil
 		}
 	}
-	return "", fmt.Errorf("Could not find changelog file")
+	return "", fmt.Errorf("could not find changelog file")
 }
 
 // ReadChangelog reads source file and return contents as array of bytes
 func ReadChangelog(file string) ([]byte, error) {
 	source, err := ioutil.ReadFile(file)
 	if err != nil {
-		return nil, fmt.Errorf("Error reading changelog file '%s'", file)
+		return nil, fmt.Errorf("reading changelog file '%s'", file)
 	}
 	return source, nil
 }
@@ -114,7 +114,7 @@ func ParseChangelog(source []byte) (Changelog, error) {
 	var changelog Changelog
 	err := yaml.Unmarshal(source, &changelog)
 	if err != nil {
-		return nil, fmt.Errorf("Error parsing changelog: %s", err.Error())
+		return nil, fmt.Errorf("parsing changelog: %s", err.Error())
 	}
 	return changelog, nil
 }

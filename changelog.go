@@ -10,7 +10,7 @@ import (
 
 func printError(err error) {
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "ERROR: %s", err.Error())
+		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err.Error())
 		os.Exit(1)
 	}
 }
@@ -42,8 +42,7 @@ func main() {
 		if strings.HasPrefix(command, "-") {
 			delta, err := strconv.Atoi(command[1:])
 			if err != nil || delta >= len(changelog) {
-				fmt.Printf("Bad shift '%s'\n", command)
-				os.Exit(1)
+				printError(fmt.Errorf("bad shift '%s'", command))
 			}
 			changelog = changelog[delta:]
 			command = os.Args[2]
@@ -56,7 +55,6 @@ func main() {
 	if function != nil {
 		function(changelog, args)
 	} else {
-		fmt.Printf("Command '%s' unknown\n", command)
-		os.Exit(1)
+		printError(fmt.Errorf("command '%s' unknown", command))
 	}
 }
