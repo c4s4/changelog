@@ -1,7 +1,6 @@
 # NeON build file (http://github.com/c4s4/neon)
 
-extends:
-- c4s4/build/golang.yml
+extends: [golang, git, changelog]
 
 properties:
   WEB_HOME:  'casa@sweetohm.net:/home/web/dist/={NAME}'
