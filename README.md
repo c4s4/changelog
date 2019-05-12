@@ -1,5 +1,4 @@
-Changelog
-=========
+# Changelog
 
 [![Build Status](https://travis-ci.org/c4s4/changelog.svg?branch=master)](https://travis-ci.org/c4s4/changelog)
 [![Code Quality](https://goreportcard.com/badge/github.com/c4s4/changelog)](https://goreportcard.com/report/github.com/c4s4/changelog)
@@ -73,14 +72,27 @@ changelog, use < character with its path:
 will check for release a changelog in 'path/to' directory.
 ```
 
-Installation
-------------
+## Installation
 
-To install *changelog*, you can :
+### Unix users (Linux, BSDs and MacOSX)
 
-### Install binary
+Unix users may download and install latest *changelog* release with command:
 
-Download latest binary archive at <https://github.com/c4s4/changelog/releases>. Unzip the archive, put the binary of your platform somewhere in your *PATH* and rename it *changelog*.
+```bash
+$ sh -c "$(curl http://sweetohm.net/dist/changelog/install)"
+```
+
+If *curl* is not installed on you system, you might run:
+
+```bash
+$ sh -c "$(wget -O - http://sweetohm.net/dist/changelog/install)"
+```
+
+**Note:** Some directories are protected, even as *root*, on **MacOSX** (since *El Capitan* release), thus you can't install *changelog* in */usr/bin* for instance.
+
+### Binary package
+
+Otherwise, you can download latest binary archive at <https://github.com/c4s4/dotrun/releases>. Unzip the archive, put the binary of your platform somewhere in your *PATH* and rename it *dotrun*.
 
 ### Build from sources
 
@@ -93,15 +105,14 @@ $ go get -u gopkg.in/yaml.v2
 Get the project master and build the binary :
 
 ```bash
-git clone git@github.com:c4s4/changelog
-cd changelog
-go build
+$ git clone git@github.com:c4s4/changelog
+$ cd changelog
+$ go build
 ```
 
 This will generate a *changelog* binary for your platform. Put this binary somewhere in your *PATH*.
 
-Changelog Format
-----------------
+## Changelog Format
 
 The changelog file is made of a series of entries, one for each release. Each entry must include a release *version* and a release *date*. It may optionally contain a *summary*. For instance:
 
@@ -137,8 +148,7 @@ This changelog uses [YAML file format](http://yaml.org/spec/1.2/spec.html). Most
 - You can't indent with tab characters, this is a syntax error! You *must* use spaces.
 - A colon is the character to separate name from value in a map. Thus, if you have a colon in a text, you should surround it with quotes.
 
-Release features
-----------------
+## Release features
 
 These features are useful while releasing software: you can extract all release information (such as version, date and summary) from the changelog. You don't have to duplicate release version in changelog and in makefile for instance. You can also check that release version and date formats are correct. Finally you can ensure that release date in changelog is today, thus avoiding a wrong release date in a changelog.
 
@@ -151,16 +161,14 @@ These features are useful while releasing software: you can extract all release 
 - `changelog release version` extracts, checks and prints release version.
 - `changelog release summary` extracts and prints the release summary.
 
-Transformation features
------------------------
+## Transformation features
 
 You can transform the YAML changelog into HTML.
 
 - `changelog to html` transforms changelog to HTML and prints it on the console. No stylesheet is applied.
 - `changelog to html stylesheet` transforms the changelog to HTML and applies the stylesheet which path is *stylesheet*. The special value *style* for stylesheet applies a default stylesheet.
 
-Usage
------
+## Usage
 
 You will find an example script that calls *changelog* to perform a release in *sh* directory of the archive.
 

@@ -4,5 +4,22 @@ extends:
 - c4s4/build/golang.yml
 
 properties:
-  LIBRARIES:
-  - 'gopkg.in/yaml.v2'
+  WEB_HOME:  'casa@sweetohm.net:/home/web/dist/={NAME}'
+  LIBRARIES: 'gopkg.in/yaml.v2'
+
+targets:
+
+  deploy:
+    doc: Deploy installation script and binaries
+    depends: binaries
+    steps:
+    - print: 'Deploying dotrun binaries...'
+    - $: ['scp', 'install', =WEB_HOME]
+    - 'binaries = join(find(".", BUILD_DIR+"/bin/*"), " ")'
+    - $: 'scp ={binaries} ={WEB_HOME}'
+
+  release:
+    doc: Perform a release
+    depends: [test, version, archive, deploy]
+    steps:
+    - super:
