@@ -64,6 +64,8 @@ func release(changelog Changelog, args []string) error {
 			fmt.Println((changelog)[0].Version)
 		} else if args[0] == "to" {
 			releaseToMarkdown((changelog)[0])
+		} else if args[0] == "desc" {
+			descriptionToMarkdown((changelog)[0])
 		} else {
 			return fmt.Errorf("Unknown release argument %s", args[0])
 		}
