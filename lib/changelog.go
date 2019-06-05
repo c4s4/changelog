@@ -40,17 +40,18 @@ const (
 	// HelpMessage is the help text
 	HelpMessage = `Manage semantic changelog
 
-  changelog                      Print this Help screen
-  changelog release              Check for release
-  changelog release date         Print release date
-  changelog release date check   Check that release date wright
-  changelog release version      Print release version
-  changelog release summary      Print release summary
-  changelog release to markdown  Print release changelog in markdown
-  changelog to html              Transform changelog to html
-  changelog to html stylesheet   Transform to html with a stylesheet
-                                 ('style' uses a default stylesheet)
-  changelog to markdown          Transform changelog to markdown
+  changelog                        Print this Help screen
+  changelog release                Check for release
+  changelog release date           Print release date
+  changelog release date check     Check that release date wright
+  changelog release version        Print release version
+  changelog release summary        Print release summary
+  changelog release to markdown    Print release changelog in markdown
+  changelog release desc markdown  Print release changelog description in markdown
+  changelog to html                Transform changelog to html
+  changelog to html stylesheet     Transform to html with a stylesheet
+                                   ('style' uses a default stylesheet)
+  changelog to markdown            Transform changelog to markdown
 
 You can add 'next' after changelog command to consider next to last release
 instead of the last, or '-N' go go back in past Nth release.

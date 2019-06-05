@@ -562,6 +562,40 @@ pre code, pre tt {
 
 {{ range $entry := .Notes }}- {{ . }}
 {{ end }}{{ end }}`
+
+	// MdTemplateDescription is a markdown template for a release description
+	MdTemplateDescription = `{{ if .Added }}# Added
+
+{{ range $entry := .Added }}- {{ . }}
+{{ end }}{{ end }}{{ if .Changed }}
+# Changed
+
+{{ range $entry := .Changed }}- {{ . }}
+{{ end }}{{ end }}{{ if .Deprecated }}
+# Deprecated
+
+{{ range $entry := .Deprecated }}- {{ . }}
+{{ end }}{{ end }}{{ if .Removed }}
+# Removed
+
+{{ range $entry := .Removed }}- {{ . }}
+{{ end }}{{ end }}{{ if .Fixed }}
+# Fixed
+
+{{ range $entry := .Fixed }}- {{ . }}
+{{ end }}{{ end }}{{ if .Security }}
+# Security
+
+{{ range $entry := .Security }}- {{ . }}
+{{ end }}{{ end }}{{ if .Rejected }}
+# Rejected
+
+{{ range $entry := .Rejected }}- {{ . }}
+{{ end }}{{ end }}{{ if .Notes }}
+# Notes
+
+{{ range $entry := .Notes }}- {{ . }}
+{{ end }}{{ end }}`
 )
 
 // TemplateDataChangelog contains data for changelog template
@@ -612,6 +646,15 @@ func toMarkdown(changelog Changelog) error {
 
 func releaseToMarkdown(release Release) error {
 	t := template.Must(template.New("release").Parse(MdTemplateRelease))
+	err := t.Execute(os.Stdout, release)
+	if err != nil {
+		return fmt.Errorf("Error processing template: %s", err)
+	}
+	return nil
+}
+
+func descriptionToMarkdown(release Release) error {
+	t := template.Must(template.New("description").Parse(MdTemplateDescription))
 	err := t.Execute(os.Stdout, release)
 	if err != nil {
 		return fmt.Errorf("Error processing template: %s", err)

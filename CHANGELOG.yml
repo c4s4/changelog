@@ -1,5 +1,9 @@
 # Semantic Changelog (http://github.com/c4s4/changelog)
 
+- version: 1.7.2
+  date:    2019-06-05
+  summary: Added markdown description
+
 - version: 1.6.2
   date:    2019-05-12
   summary: Added web installer
