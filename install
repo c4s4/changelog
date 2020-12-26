@@ -1,12 +1,12 @@
 #!/bin/sh
-# 
+#
 # Installation script for Unix platforms. To run installation, type :
-# 
-# $ sh -c "$(curl http://sweetohm.net/dist/${NAME}/install)"
-# 
+#
+# $ sh -c "$(curl https://sweetohm.net/dist/${NAME}/install)"
+#
 # or (if you don't have curl installed):
-# 
-# $ sh -c "$(wget -O - http://sweetohm.net/dist/${NAME}/install)"
+#
+# $ sh -c "$(wget -O - https://sweetohm.net/dist/${NAME}/install)"
 
 set -e
 
@@ -59,7 +59,7 @@ else
 fi
 
 # download binary in /tmp/${NAME} and make it executable
-${command} /tmp/${NAME} http://sweetohm.net/dist/${NAME}/${binary}
+${command} /tmp/${NAME} https://sweetohm.net/dist/${NAME}/${binary}
 chmod +x /tmp/${NAME}
 
 # prompt for installation directory
