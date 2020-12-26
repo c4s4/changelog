@@ -79,13 +79,13 @@ will check for release a changelog in 'path/to' directory.
 Unix users may download and install latest *changelog* release with command:
 
 ```bash
-$ sh -c "$(curl http://sweetohm.net/dist/changelog/install)"
+$ sh -c "$(curl https://sweetohm.net/dist/changelog/install)"
 ```
 
 If *curl* is not installed on you system, you might run:
 
 ```bash
-$ sh -c "$(wget -O - http://sweetohm.net/dist/changelog/install)"
+$ sh -c "$(wget -O - https://sweetohm.net/dist/changelog/install)"
 ```
 
 **Note:** Some directories are protected, even as *root*, on **MacOSX** (since *El Capitan* release), thus you can't install *changelog* in */usr/bin* for instance.
