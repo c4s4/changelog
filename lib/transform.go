@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"text/template"
 )
 
@@ -612,7 +613,7 @@ func toHTML(changelog Changelog, args []string) error {
 		if file == "style" {
 			Stylesheet = []byte(Stylesheet)
 		} else {
-			Stylesheet, err = ioutil.ReadFile(file)
+			Stylesheet, err = ioutil.ReadFile(filepath.Clean(file))
 			if err != nil {
 				return fmt.Errorf("Error loading Stylesheet %s: %s", file, err.Error())
 			}
@@ -663,17 +664,23 @@ func descriptionToMarkdown(release Release) error {
 }
 
 func transform(changelog Changelog, args []string) error {
-	checkChangelog(changelog)
+	if err := checkChangelog(changelog); err != nil {
+		return fmt.Errorf("checking changelog: %v", err)
+	}
 	if len(args) < 1 {
-		return fmt.Errorf("You must pass format to transform to")
+		return fmt.Errorf("you must pass format to transform to")
 	}
 	format := args[0]
 	if format == "html" {
-		toHTML(changelog, args[1:])
+		if err := toHTML(changelog, args[1:]); err != nil {
+			return fmt.Errorf("generating HTML: %v", err)
+		}
 	} else if format == "markdown" {
-		toMarkdown(changelog)
+		if err := toMarkdown(changelog); err != nil {
+			return fmt.Errorf("generating markdown: %v", err)
+		}
 	} else {
-		return fmt.Errorf("Unknown format %s", args[0])
+		return fmt.Errorf("unknown format %s", args[0])
 	}
 	return nil
 }

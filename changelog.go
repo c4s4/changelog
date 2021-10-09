@@ -53,7 +53,9 @@ func main() {
 	}
 	function := lib.CommandMapping[command]
 	if function != nil {
-		function(changelog, args)
+		if err := function(changelog, args); err != nil {
+			printError(fmt.Errorf("running command: %v", err))
+		}
 	} else {
 		printError(fmt.Errorf("command '%s' unknown", command))
 	}

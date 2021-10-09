@@ -2,10 +2,12 @@ package lib
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
+
+	"gopkg.in/yaml.v2"
 )
 
 // Command is a changelog command implemented with a function
@@ -103,7 +105,7 @@ func FindChangelog() (string, error) {
 
 // ReadChangelog reads source file and return contents as array of bytes
 func ReadChangelog(file string) ([]byte, error) {
-	source, err := ioutil.ReadFile(file)
+	source, err := ioutil.ReadFile(filepath.Clean(file))
 	if err != nil {
 		return nil, fmt.Errorf("reading changelog file '%s'", file)
 	}

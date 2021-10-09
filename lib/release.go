@@ -46,7 +46,9 @@ func checkChangelog(changelog Changelog) error {
 }
 
 func release(changelog Changelog, args []string) error {
-	checkChangelog(changelog)
+	if err := checkChangelog(changelog); err != nil {
+		return fmt.Errorf("checking changelog: %v", err)
+	}
 	if len(args) > 0 && len(changelog) > 0 {
 		if args[0] == "summary" {
 			fmt.Println((changelog)[0].Summary)
@@ -63,11 +65,15 @@ func release(changelog Changelog, args []string) error {
 		} else if args[0] == "version" {
 			fmt.Println((changelog)[0].Version)
 		} else if args[0] == "to" {
-			releaseToMarkdown((changelog)[0])
+			if err := releaseToMarkdown((changelog)[0]); err != nil {
+				return fmt.Errorf("generating markdown: %v", err)
+			}
 		} else if args[0] == "desc" {
-			descriptionToMarkdown((changelog)[0])
+			if err := descriptionToMarkdown((changelog)[0]); err != nil {
+				return fmt.Errorf("generating markdown: %v", err)
+			}
 		} else {
-			return fmt.Errorf("Unknown release argument %s", args[0])
+			return fmt.Errorf("unknown release argument %s", args[0])
 		}
 	}
 	return nil
